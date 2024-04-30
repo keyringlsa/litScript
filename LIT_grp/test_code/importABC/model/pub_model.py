@@ -1,6 +1,8 @@
 # Author lt_hyunyong_ki in 2024 02 19
 from PySide2 import QtCore, QtGui, QtWidgets
 
+
+
 HORIZONTAL_HEADERS = ['name', 'artist', 'created_date', 'description', 'version', 'versions', 'import']
 VERSION_CHANGE_ROLE = QtCore.Qt.UserRole + 1
 
@@ -71,6 +73,7 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
 
         self.rootItem = ItemModel()  # 부모 선언
         self.entri_datas = row_datas
+
         self.head_items = head_items
 
 
@@ -87,13 +90,18 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
         self.rootItem.appendChild(alembic_parent)
         self.rootItem.appendChild(atom_parent)
 
+        created_items = []  # 이미 생성된 아이템들을 저장할 리스트
+
         for item_name, datas in self.entri_datas.items():
             data_type = datas['type'].get("name")
             version_data_list = datas['items']
             data_name = item_name.split('_')[1]
+            data_task = datas['task'].get("name")
+
+
 
             if data_type == "Alembic Cache":
-                #알엠빅 아래에 카테고리 나누기
+                # 알엠빅 아래에 카테고리 나누기
                 for head in self.head_items:
                     head_type = self.head_items[head]['type']
                     head_names = self.head_items[head]['name']
@@ -106,8 +114,11 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
                         if not parent_item:
                             parent_item = ItemModel(name=head_type, parent=alembic_parent)
                             alembic_parent.appendChild(parent_item)
-                        item = ItemModel(name=item_name, row_data=version_data_list, file_type=data_type, parent=parent_item)
-                        parent_item.appendChild(item)
+                        if item_name not in created_items:  # 이미 생성된 아이템인지 확인
+                            item = ItemModel(name=item_name, row_data=version_data_list, file_type=data_type,
+                                             parent=parent_item)
+                            parent_item.appendChild(item)
+                            created_items.append(item_name)  # 생성된 아이템 추가
                         break
             elif data_type == "Atom File":
                 parent_item = atom_parent
@@ -116,9 +127,10 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
             else:
                 parent_item = self.rootItem
 
-            item = ItemModel(name=item_name, row_data=version_data_list, file_type=data_type, parent=parent_item)
-
-            parent_item.appendChild(item)
+            if item_name not in created_items:  # 이미 생성된 아이템인지 확인
+                item = ItemModel(name=item_name, row_data=version_data_list, file_type=data_type, parent=parent_item)
+                parent_item.appendChild(item)
+                created_items.append(item_name)  # 생성된 아이템 추가
 
 
 
@@ -150,6 +162,7 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
 
     def rowCount(self, parent=QtCore.QModelIndex()):
         if parent.column() > 0:
+
             return 0
 
         if not parent.isValid():
@@ -204,6 +217,20 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
                     gradient.setCoordinateMode(QtGui.QLinearGradient.ObjectMode)
                     return QtGui.QBrush(gradient)
 
+        elif role == QtCore.Qt.FontRole:
+            font = QtGui.QFont()
+            parent_index = index.parent()  # 인덱스의 부모를 가져옴
+            parent_item = parent_index.internalPointer() if parent_index.isValid() else None  # 부모 아이템 가져옴
+            if column == 0 and parent_item is None:  # 부모 아이템이 없는 경우에만 백그라운드 적용
+                font.setPointSize(12)
+
+            elif column == 0 :
+                font.setPointSize(12)
+
+            return font
+
+
+
         elif role == QtCore.Qt.UserRole:
             return item
 
@@ -217,3 +244,53 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
             except IndexError:
                 pass
         return None
+
+
+
+class ImportButtonDelegate(QtWidgets.QItemDelegate):
+    cmb_index_changed = QtCore.Signal(int, object)
+    button_clicked = QtCore.Signal(object)
+
+    def __init__(self, parent=None):
+        QtWidgets.QItemDelegate.__init__(self, parent)
+
+    def createEditor(self, parent, option, index):
+        column = index.column()
+        item = index.data(QtCore.Qt.UserRole)
+
+        editor = QtWidgets.QWidget(parent)
+        layout = QtWidgets.QVBoxLayout(editor)
+        layout.setContentsMargins(2, 2, 2, 2)
+        layout.setSpacing(10)
+
+        if column == 5:
+            combo = QtWidgets.QComboBox(editor)
+
+            layout.addWidget(combo)
+            for pub_file in reversed(item.row_data):
+                version_num = pub_file['version_number']
+                combo.addItem(str(version_num), userData=pub_file)
+
+            slot_changedComboIndex = lambda: self.changedComboIndex(version=combo.currentText(), row_index=index)
+            combo.currentIndexChanged.connect(slot_changedComboIndex)
+
+        elif column == 6:
+            button = QtWidgets.QPushButton(editor)
+            layout.addWidget(button)
+            button.setText(f"import")
+            button.setFixedSize(80, 40)
+            labda_button_clicked = lambda: self.buttonFunction(index=index)
+            button.clicked.connect(labda_button_clicked)
+
+        return editor
+
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(option.rect)
+
+    @QtCore.Slot()
+    def buttonFunction(self, index):
+        self.button_clicked.emit(index)
+
+    @QtCore.Slot()
+    def changedComboIndex(self, version=None, row_index=None):
+        self.cmb_index_changed.emit(int(version), row_index)

@@ -116,3 +116,48 @@ def connect_material_to_faces():
 
 
 connect_material_to_faces()
+
+
+def set_model(self):
+    cate_items = shotgrid_handler.get_category()
+    pub_items = shotgrid_handler.get_pub_datas()
+
+    self.items = pub_model.ItemTreeModel(row_datas=pub_items, head_items=cate_items)
+    self.import_proxy_model = QtCore.QSortFilterProxyModel(self)
+    self.import_proxy_model.setSourceModel(self.items)
+    self.ui.publist.setModel(self.import_proxy_model)
+
+    # 모든 트리 아이템 확장
+    self.ui.publist.expandAll()
+
+    # 컬럼 크기 조정
+    for i in range(self.ui.publist.header().count()):
+        self.ui.publist.resizeColumnToContents(i)
+
+    # 프록시 모델을 반복하여 콤보 상자와 버튼에 대한 편집기 열기
+    for i in range(self.import_proxy_model.rowCount()):
+        parent_index = self.import_proxy_model.index(i, 0)
+        parent_item = parent_index.data(QtCore.Qt.UserRole)
+
+        if parent_item.name == "ALEMBIC":
+            # 'ALEMBIC' 부모 아래의 모든 하위 아이템에 대해 반복
+            for p_i in range(self.import_proxy_model.rowCount(parent_index)):
+                # 각 하위 아이템의 인덱스 가져오기
+                child_index = self.import_proxy_model.index(p_i, 0, parent_index)
+                child_item = child_index.data(QtCore.Qt.UserRole)
+
+                # 각 하위 아이템의 콤보 상자와 버튼 열기
+                combo_index = self.import_proxy_model.index(p_i, 5, child_index)
+                button_index = self.import_proxy_model.index(p_i, 6, child_index)
+
+                # 콤보 상자와 버튼의 편집기를 올바른 인덱스로 열기
+                self.ui.publist.openPersistentEditor(combo_index)
+                self.ui.publist.openPersistentEditor(button_index)
+        else:
+            # 'ALEMBIC'이 아닌 다른 부모의 콤보 상자와 버튼 열기
+            combo_index = self.import_proxy_model.index(i, 5, parent_index)
+            button_index = self.import_proxy_model.index(i, 6, parent_index)
+
+            # 올바른 인덱스로 편집기 열기
+            self.ui.publist.openPersistentEditor(combo_index)
+            self.ui.publist.openPersistentEditor(button_index)

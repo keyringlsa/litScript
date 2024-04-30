@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'hoonie2_uiIgjVND.ui'
+## Form generated from reading UI file 'hoonie2_uiSzRoMt.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -17,7 +17,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(970, 916)
+        Form.resize(970, 820)
         self.verticalLayout_2 = QVBoxLayout(Form)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
@@ -61,6 +61,11 @@ class Ui_Form(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.publist = QTreeView(self.tab)
         self.publist.setObjectName(u"publist")
+        font2 = QFont()
+        font2.setPointSize(9)
+        font2.setBold(False)
+        font2.setWeight(50)
+        self.publist.setFont(font2)
 
         self.horizontalLayout_6.addWidget(self.publist)
 
@@ -71,6 +76,7 @@ class Ui_Form(object):
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.importedlist = QTreeView(self.tab_2)
         self.importedlist.setObjectName(u"importedlist")
+        self.importedlist.setFont(font2)
 
         self.horizontalLayout_7.addWidget(self.importedlist)
 
@@ -104,7 +110,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Form)

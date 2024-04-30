@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>970</width>
-    <height>916</height>
+    <height>820</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,7 +72,7 @@
           </font>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -80,7 +80,15 @@
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QTreeView" name="publist"/>
+            <widget class="QTreeView" name="publist">
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -90,7 +98,15 @@
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="QTreeView" name="importedlist"/>
+            <widget class="QTreeView" name="importedlist">
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
