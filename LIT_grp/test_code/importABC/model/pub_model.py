@@ -236,6 +236,9 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
 
         return None
 
+
+
+
     def headerData(self, column, orientation, role):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
             try:
@@ -243,6 +246,7 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
                 # return None
             except IndexError:
                 pass
+
         return None
 
 

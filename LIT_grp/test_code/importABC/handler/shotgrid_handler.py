@@ -5,12 +5,14 @@ from CoreModules.handler import connect_sg
 
 
 
-def get_category() :
-    sgl = connect_sg.Shotgun_Connect()
-    sg = sgl.default_script_auth()
+def get_category(sg=None, context=None) :
+    #sgl = connect_sg.Shotgun_Connect()
+    #sg = sgl.default_script_auth()
 
-    project = {'name': 'DNF45', 'id': 519, 'type': 'Project'}  # context.project
-    entity = {'name': 'DNF45_0140', 'id': 3035, 'type': 'Shot'}  # context.entity
+    project = context.project
+    #entity = context.entity
+    #project = {'name': 'DNF45', 'id': 519, 'type': 'Project'}  # context.project
+    #entity = {'name': 'DNF45_0140', 'id': 3035, 'type': 'Shot'}  # context.entity
 
     requires_fields = sg.schema_field_read("Asset")
     # pprint(requires_fields)
@@ -41,13 +43,12 @@ def get_category() :
 
 #get_category()
 #def get_pub_datas(sg, context) :
-def get_pub_datas() :
-    sgl = connect_sg.Shotgun_Connect()
-    sg = sgl.default_script_auth()
+def get_pub_datas(sg=None, context=None) :
+    # sgl = connect_sg.Shotgun_Connect()
+    # sg = sgl.default_script_auth()
 
-
-    project = {'name': 'DNF45', 'id': 519, 'type': 'Project'} #context.project
-    entity = {'name': 'DNF45_0140', 'id': 3035, 'type': 'Shot'} #context.entity
+    project = context.project
+    entity = context.entity
 
     requires_fields = sg.schema_field_read('PublishedFile')
     cfx_filters = [
@@ -120,7 +121,39 @@ def get_pub_datas() :
 
     return cfx_dict
 
-get_pub_datas()
 
+def get_published_shd_file(sg=None, context=None, asset_name=None):
 
+    project = context.project
+
+    requires_fields = sg.schema_field_read('PublishedFile')
+    filters = [
+        ['project', 'is', project],
+        ['entity', 'name_is', asset_name],
+        {
+            "filter_operator": "any",
+            "filters":[
+                ['task', 'name_is', 'lookdev'],
+                ['task', 'name_is', 'lkd'],
+                ['task', 'name_is', 'mdl'],
+                ['task', 'name_is', 'model'],
+            ]
+        },
+        ['published_file_type', 'is', {'id': 35, 'name': 'Yml File', 'type': 'PublishedFileType'}]
+    ]
+
+    sg_found = sg.find('PublishedFile',
+                       filters=filters,
+                       fields=list(requires_fields.keys()))
+
+    # filtered not shade yaml files
+    filtering_shade_yaml_files = list()
+
+    for pub in sg_found:
+        file_path = pub.get('path').get('local_path')
+
+        if 'shade' in file_path:
+            filtering_shade_yaml_files.append(pub)
+
+    return filtering_shade_yaml_files
 
