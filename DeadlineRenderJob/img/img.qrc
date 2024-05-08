@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>search.png</file>
+    <file>render_layer_disable.png</file>
+    <file>render_layer_enable.png</file>
+  </qresource>
+</RCC>
