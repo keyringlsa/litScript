@@ -1,12 +1,12 @@
-import sgtk, os, sys
+import sgtk, os
 from pprint import pprint
 from importlib import reload
-from PySide2 import QtWidgets, QtGui, QtCore
+from PySide2 import QtWidgets, QtCore
 
 from CoreModules.handler import connect_sg
-from LIT_grp.test_code.importABC.UI import ui_hoonie2
-from LIT_grp.test_code.importABC.model import pub_model, imported_model
-from LIT_grp.test_code.importABC.handler import shotgrid_handler, maya_handler, shader_importer
+from importABC.UI import ui_hoonie2
+from importABC.model import imported_model, pub_model
+from importABC.handler import maya_handler, shotgrid_handler, shader_importer
 
 # 모듈 리로드
 reload(connect_sg)
@@ -241,8 +241,8 @@ class HoonieMain(QtWidgets.QWidget):
 
         for asset_name in row_datas:
             shaders = shotgrid_handler.get_published_shd_file(sg=self.sg,
-                                                             context=self.context,
-                                                             asset_name=asset_name)
+                                                              context=self.context,
+                                                              asset_name=asset_name)
             row_datas[asset_name]['shader'].extend(shaders)
 
 
