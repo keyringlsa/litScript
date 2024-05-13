@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'hoonie2_uiSzRoMt.ui'
+## Form generated from reading UI file 'hoonie2_uiynPiNV.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -117,12 +117,12 @@ class Ui_Form(object):
     # setupUi
 
     def retranslateUi(self, Form):
-        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        Form.setWindowTitle(QCoreApplication.translate("Form", u"HOONIE_ver02", None))
         self.label.setText(QCoreApplication.translate("Form", u"Hoonie ver2", None))
         self.btn_reload.setText(QCoreApplication.translate("Form", u"Reload", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Form", u"Publish", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Form", u"Imported", None))
-        self.label_2.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_2.setText(QCoreApplication.translate("Form", u"24.05.13", None))
         self.btn_shotgrid.setText(QCoreApplication.translate("Form", u"Open page Shotgrid", None))
     # retranslateUi
 
