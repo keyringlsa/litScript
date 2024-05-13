@@ -18,6 +18,12 @@ def import_alembic_file(row_data=None, context=None):
     id = row_data.id
     namespace = name.split('_', 1)[0]
     asset_name = name.split('_', 1)[-1].split('__')[0]
+    end_name = name.split('__')[-1]
+    if end_name == "FX.abc" :
+        namespace = name.split('_', 1)[0]+"FX"
+
+    else :
+        namespace = name.split('_', 1)[0]
     root_node = f"{namespace}:{asset_name}"
 
     if not cmds.objExists(root_node):

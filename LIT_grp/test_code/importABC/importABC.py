@@ -47,24 +47,63 @@ class HoonieMain(QtWidgets.QWidget):
         self.ui.importedlist.setItemDelegate(self.ImportedItemDelegate)
         self.ui.importedlist.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
+        # context menu item
+        self.ui.publist.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.publist.customContextMenuRequested.connect(self.importView_context_menu)
+
+        self.ui.importedlist.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.importedlist.customContextMenuRequested.connect(self.importedView_context_menu)
 
 
         self.connected()
 
     def connected(self):
         self.set_model()
+        self.ui.btn_reload.clicked.connect(self.set_model)
+        self.ui.btn_shotgrid.clicked.connect(self.open_shot_page)
 
-        self.ui.publist.clicked.connect(self.on_item_clicked)
+        self.ImportButtonDelegate.cmb_index_changed.connect(self.change_import_item_version)
+        self.ImportButtonDelegate.button_clicked.connect(self.import_into_current_scene)
 
-        delegate = self.ui.publist.itemDelegate()
-        if isinstance(delegate, pub_model.ImportButtonDelegate):
-            delegate.cmb_index_changed.connect(self.change_import_item_version)
-            delegate.button_clicked.connect(self.import_into_current_scene)
+        #self.ui.publist.clicked.connect(self.on_item_clicked)
+
+        # delegate = self.ui.publist.itemDelegate()
+        # if isinstance(delegate, pub_model.ImportButtonDelegate):
+        #     delegate.cmb_index_changed.connect(self.change_import_item_version)
+        #     delegate.button_clicked.connect(self.import_into_current_scene)
 
         self.ui.importedlist.clicked.connect(self.select_item)
         self.ImportedItemDelegate.cmb_index_changed.connect(self.change_imported_item_version)
         self.ImportedItemDelegate.button_clicked.connect(self.replace_imported_item)
         self.ImportedItemDelegate.shader_assign_clicked.connect(self.assign_shader)
+
+    def open_shot_page(self):
+        shotgrid_handler.open_shot_url(sg=self.sg, context=self.context)
+
+    @QtCore.Slot(QtCore.QPoint)
+    def importView_context_menu(self, pos):
+        viewport = self.ui.publist.viewport()
+        menu = QtWidgets.QMenu(viewport)
+
+        multi_item_import_menu = menu.addAction('Import - Selected Items')
+        multi_item_import_menu.triggered[()].connect(lambda: self.import_selected_items())
+        open_item_directory_menu = menu.addAction('Open - Item Directory')
+        open_item_directory_menu.triggered[()].connect(lambda: self.open_sel_item_dir())
+        dev_print_menu = menu.addAction("Dev - Print")
+        dev_print_menu.triggered[()].connect(self.dev_print)
+        menu.exec_(viewport.mapToGlobal(pos))
+
+    @QtCore.Slot(QtCore.QPoint)
+    def importedView_context_menu(self, pos):
+        viewport = self.ui.importedlist.viewport()
+        menu = QtWidgets.QMenu(viewport)
+
+        multi_item_import_menu = menu.addAction('Print - Dev Data')
+        multi_item_import_menu.triggered[()].connect(self.print_data)
+
+
+        menu.exec_(viewport.mapToGlobal(pos))
+
 
 
     def set_model(self):
@@ -73,16 +112,14 @@ class HoonieMain(QtWidgets.QWidget):
 
     ## pub view actions ##
     def set_pub_model(self):
+        exist_file_names = maya_handler.already_exists_files()
         cate_items = shotgrid_handler.get_category(sg=self.sg, context=self.context)
         pub_items = shotgrid_handler.get_pub_datas(sg=self.sg, context=self.context)
 
-        self.pub_items = pub_model.ItemTreeModel(row_datas=pub_items, head_items=cate_items)
+        self.pub_items = pub_model.ItemTreeModel(row_datas=pub_items, head_items=cate_items, exist_files=exist_file_names)
         self.import_proxy_model.setSourceModel(self.pub_items)
 
         self.import_proxy_model.sort(2, QtCore.Qt.DescendingOrder)
-
-
-
 
 
         self.ui.publist.setModel(self.import_proxy_model)
@@ -127,11 +164,12 @@ class HoonieMain(QtWidgets.QWidget):
         maya_handler.import_pub_item(row_data=row_data, context=self.context)
         self.set_model()
 
-    @QtCore.Slot(QtCore.QModelIndex)
-    def on_item_clicked(self, index):
-        # 아이템 클릭 이벤트를 처리합니다.
-        if index.column() == 6:  # 6은 가져오기 버튼이 있는 열을 가정합니다.
-            self.import_into_current_scene(index)
+
+    # @QtCore.Slot(QtCore.QModelIndex)
+    # def on_item_clicked(self, index):
+    #     # 아이템 클릭 이벤트를 처리합니다.
+    #     if index.column() == 6:  # 6은 가져오기 버튼이 있는 열을 가정합니다.
+    #         self.import_into_current_scene(index)
 
     def get_selected_indexes_from_import_view(self):
 
@@ -155,6 +193,20 @@ class HoonieMain(QtWidgets.QWidget):
             maya_handler.import_pub_item(row_data=item, context=self.context)
 
         self.set_model()
+
+    def open_sel_item_dir(self):
+
+        sel_items = self.get_selected_indexes_from_import_view()
+
+        dir, file_name = os.path.split(sel_items[0].file_path)
+
+        os.startfile(dir)
+
+    def dev_print(self):
+        sel_items = self.get_selected_indexes_from_import_view()
+
+        for item in sel_items:
+            pprint(item.row_data)
 
     ## imported view actions ##
 

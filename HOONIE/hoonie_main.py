@@ -62,9 +62,6 @@ class HoonieMain(QtWidgets.QWidget):
         self.ui.Imported_QTreeView.setItemDelegate(self.imported_item_delegate)
 
 
-        self.imported_model = None
-        self.imported_proxy_model = QtCore.QSortFilterProxyModel()
-
         # context menu item
         self.ui.Import_QTreeView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.Import_QTreeView.customContextMenuRequested.connect(self.importView_context_menu)
@@ -75,6 +72,7 @@ class HoonieMain(QtWidgets.QWidget):
         self.connected()
 
     def connected(self):
+
         self.set_model()
         self.ui.reload_Btn.clicked.connect(self.set_model)
         self.ui.OpenShotPage_Btn.clicked.connect(self.open_shot_page)

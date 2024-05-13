@@ -147,11 +147,11 @@ class PubItemTreeModel(QtCore.QAbstractItemModel):
 
             if len(imported_datas['shader']) > 0:
 
-                shader_parent = PubItem(name="Material", parent=asset_item, p_row=2)
+                shader_parent = PubItem(name="Material", parent=asset_item, p_row=4)
                 asset_item.appendChild(shader_parent)
 
                 shader_item = PubItem(name=f"{asset_name}__MAT", current_version=imported_datas['shader'][-1],
-                                      all_versions=imported_datas['shader'], data_type="YML", parent=shader_parent, p_row=3)
+                                      all_versions=imported_datas['shader'], data_type="YML", parent=shader_parent, p_row=5)
                 shader_parent.appendChild(shader_item)
 
     def index(self, row, column, parent=QtCore.QModelIndex()):
@@ -250,6 +250,20 @@ class PubItemTreeModel(QtCore.QAbstractItemModel):
                     gradient.setCoordinateMode(QtGui.QLinearGradient.ObjectMode)
                     return QtGui.QBrush(gradient)
 
+            elif item.p_row == 4:
+                if column == 0:
+                    dark_cyan = QtGui.QColor(88, 100, 100)
+                    dark_gray = QtGui.QColor(44, 44, 44)
+
+
+
+                    gradient = QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(1, 0))
+                    gradient.setColorAt(0, dark_cyan)
+                    gradient.setColorAt(0.65, dark_gray)
+                    gradient.setColorAt(1, dark_gray)
+                    gradient.setCoordinateMode(QtGui.QLinearGradient.ObjectMode)
+                    return QtGui.QBrush(gradient)
+
             else:
                 if item.current_version is not None:
                     if item.need_update:
@@ -271,9 +285,22 @@ class PubItemTreeModel(QtCore.QAbstractItemModel):
             if column == 0:
                 if item.p_row == 3:
                     return QtCore.QSize(200, 60)
+                elif item.p_row == 5:
+                    return QtCore.QSize(200, 60)
                 else:
                     return QtCore.QSize(200, 25)
 
+        # elif role == QtCore.Qt.FontRole:
+        #     font = QtGui.QFont()
+        #     parent_index = index.parent()  # 인덱스의 부모를 가져옴
+        #     parent_item = parent_index.internalPointer() if parent_index.isValid() else None  # 부모 아이템 가져옴
+        #     if column == 0 and parent_item is None:  # 부모 아이템이 없는 경우에만 백그라운드 적용
+        #         font.setPointSize(12)
+        #
+        #     elif column == 0 :
+        #         font.setPointSize(12)
+        #
+        #     return font
 
         elif role == QtCore.Qt.UserRole:
             return item

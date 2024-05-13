@@ -8,7 +8,7 @@ VERSION_CHANGE_ROLE = QtCore.Qt.UserRole + 1
 
 class ItemModel(object):
 
-    def __init__(self, name=None, row_data=None, file_type=None, parent=None):
+    def __init__(self, name=None, row_data=None, file_type=None, parent=None, p_row=None):
         # 여기에 부모와 자식 설정
         self.name = name
         self.row_data = row_data
@@ -16,6 +16,7 @@ class ItemModel(object):
         self.children = []
         #self.head_item = head_item
         self.file_type = file_type
+        self.p_row = p_row  # for background color role
 
         if row_data is not None:
             self.user = self.row_data[-1].get('created_by').get('name')
@@ -68,9 +69,9 @@ class ItemModel(object):
 
 
 class ItemTreeModel(QtCore.QAbstractItemModel):
-    def __init__(self, row_datas=None, parent=None, head_items=None):
+    def __init__(self, row_datas=None, parent=None, head_items=None, exist_files=None):
         super(ItemTreeModel, self).__init__(parent)
-
+        self.exist_files = exist_files
         self.rootItem = ItemModel()  # 부모 선언
         self.entri_datas = row_datas
 
@@ -83,9 +84,9 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
         #     self.make_item(dic=row_data, parent=self.rootItem)
 
     def make_item(self):
-        camera_parent = ItemModel(name="CAMERA", parent=self.rootItem)
-        alembic_parent = ItemModel(name="ALEMBIC", parent=self.rootItem)
-        atom_parent = ItemModel(name="ATOM", parent=self.rootItem)
+        camera_parent = ItemModel(name="CAMERA", parent=self.rootItem, p_row=1)
+        alembic_parent = ItemModel(name="ALEMBIC", parent=self.rootItem, p_row=1)
+        atom_parent = ItemModel(name="ATOM", parent=self.rootItem, p_row=1)
         self.rootItem.appendChild(camera_parent)
         self.rootItem.appendChild(alembic_parent)
         self.rootItem.appendChild(atom_parent)
@@ -93,44 +94,45 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
         created_items = []  # 이미 생성된 아이템들을 저장할 리스트
 
         for item_name, datas in self.entri_datas.items():
-            data_type = datas['type'].get("name")
-            version_data_list = datas['items']
-            data_name = item_name.split('_')[1]
-            data_task = datas['task'].get("name")
+            if item_name not in self.exist_files:
+                data_type = datas['type'].get("name")
+                version_data_list = datas['items']
+                data_name = item_name.split('_')[1]
+                data_task = datas['task'].get("name")
 
+                if data_type == "Alembic Cache":
+                    # 알엠빅 아래에 카테고리 나누기
+                    for head in self.head_items:
+                        head_type = self.head_items[head]['type']
+                        head_names = self.head_items[head]['name']
+                        if data_name in head_names:
+                            parent_item = None
+                            for child in alembic_parent.children:
+                                if child.name == head_type:
+                                    parent_item = child
+                                    break
+                            if not parent_item:
+                                parent_item = ItemModel(name=head_type, parent=alembic_parent, p_row=2)
+                                alembic_parent.appendChild(parent_item)
+                            if item_name not in created_items:  # 이미 생성된 아이템인지 확인
+                                item = ItemModel(name=item_name, row_data=version_data_list, file_type=data_type,
+                                                 parent=parent_item, p_row=3)
+                                parent_item.appendChild(item)
+                                created_items.append(item_name)  # 생성된 아이템 추가
+                            break
+                elif data_type == "Atom File":
+                    parent_item = atom_parent
+                elif data_type == "Yml File":
+                    parent_item = camera_parent
+                else:
+                    parent_item = self.rootItem
 
+                if item_name not in created_items:  # 이미 생성된 아이템인지 확인
+                    item = ItemModel(name=item_name, row_data=version_data_list, file_type=data_type,
+                                     parent=parent_item, p_row=1)
+                    parent_item.appendChild(item)
+                    created_items.append(item_name)  # 생성된 아이템 추가
 
-            if data_type == "Alembic Cache":
-                # 알엠빅 아래에 카테고리 나누기
-                for head in self.head_items:
-                    head_type = self.head_items[head]['type']
-                    head_names = self.head_items[head]['name']
-                    if data_name in head_names:
-                        parent_item = None
-                        for child in alembic_parent.children:
-                            if child.name == head_type:
-                                parent_item = child
-                                break
-                        if not parent_item:
-                            parent_item = ItemModel(name=head_type, parent=alembic_parent)
-                            alembic_parent.appendChild(parent_item)
-                        if item_name not in created_items:  # 이미 생성된 아이템인지 확인
-                            item = ItemModel(name=item_name, row_data=version_data_list, file_type=data_type,
-                                             parent=parent_item)
-                            parent_item.appendChild(item)
-                            created_items.append(item_name)  # 생성된 아이템 추가
-                        break
-            elif data_type == "Atom File":
-                parent_item = atom_parent
-            elif data_type == "Yml File":
-                parent_item = camera_parent
-            else:
-                parent_item = self.rootItem
-
-            if item_name not in created_items:  # 이미 생성된 아이템인지 확인
-                item = ItemModel(name=item_name, row_data=version_data_list, file_type=data_type, parent=parent_item)
-                parent_item.appendChild(item)
-                created_items.append(item_name)  # 생성된 아이템 추가
 
 
 
@@ -206,28 +208,50 @@ class ItemTreeModel(QtCore.QAbstractItemModel):
 
         elif role == QtCore.Qt.BackgroundColorRole:
             if item.row_data is None:
-                if column == 0:
-                    dark_blue = QtGui.QColor(22, 51, 84)
-                    dark_gray = QtGui.QColor(44, 44, 44)
+                if item.p_row == 1:
+                    if column == 0:
+                        dark_blue = QtGui.QColor(22, 51, 84)
+                        dark_gray = QtGui.QColor(44, 44, 44)
 
-                    gradient = QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(1, 0))
-                    gradient.setColorAt(0, dark_blue)
-                    gradient.setColorAt(0.65, dark_gray)
-                    gradient.setColorAt(1, dark_gray)
-                    gradient.setCoordinateMode(QtGui.QLinearGradient.ObjectMode)
-                    return QtGui.QBrush(gradient)
+                        gradient = QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(1, 0))
+                        gradient.setColorAt(0, dark_blue)
+                        gradient.setColorAt(0.65, dark_gray)
+                        gradient.setColorAt(1, dark_gray)
+                        gradient.setCoordinateMode(QtGui.QLinearGradient.ObjectMode)
+                        return QtGui.QBrush(gradient)
 
-        elif role == QtCore.Qt.FontRole:
-            font = QtGui.QFont()
-            parent_index = index.parent()  # 인덱스의 부모를 가져옴
-            parent_item = parent_index.internalPointer() if parent_index.isValid() else None  # 부모 아이템 가져옴
-            if column == 0 and parent_item is None:  # 부모 아이템이 없는 경우에만 백그라운드 적용
-                font.setPointSize(12)
+                elif item.p_row == 2:
+                    if column == 0:
+                        dark_cyan = QtGui.QColor(22, 100, 100)
+                        dark_gray = QtGui.QColor(44, 44, 44)
 
-            elif column == 0 :
-                font.setPointSize(12)
+                        gradient = QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(1, 0))
+                        gradient.setColorAt(0, dark_cyan)
+                        gradient.setColorAt(0.65, dark_gray)
+                        gradient.setColorAt(1, dark_gray)
+                        gradient.setCoordinateMode(QtGui.QLinearGradient.ObjectMode)
+                        return QtGui.QBrush(gradient)
 
-            return font
+        # elif role == QtCore.Qt.FontRole:
+        #     font = QtGui.QFont()
+        #     parent_index = index.parent()  # 인덱스의 부모를 가져옴
+        #     parent_item = parent_index.internalPointer() if parent_index.isValid() else None  # 부모 아이템 가져옴
+        #     if column == 0 and parent_item is None:  # 부모 아이템이 없는 경우에만 백그라운드 적용
+        #         font.setPointSize(12)
+        #
+        #     elif column == 0 :
+        #         font.setPointSize(12)
+        #
+        #     return font
+
+
+        elif role == QtCore.Qt.SizeHintRole:
+            if column == 0:
+                if item.p_row == 3:
+                    return QtCore.QSize(200, 60)
+                else:
+                    return QtCore.QSize(200, 25)
+
 
 
 

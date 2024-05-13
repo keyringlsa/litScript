@@ -1,5 +1,6 @@
 
 from pprint import pprint
+import webbrowser
 
 from CoreModules.handler import connect_sg
 
@@ -157,3 +158,28 @@ def get_published_shd_file(sg=None, context=None, asset_name=None):
 
     return filtering_shade_yaml_files
 
+
+def open_shot_url(sg=None, context=None):
+
+    page_id = get_shotgun_page_id(sg=sg, project=context.project)
+    shot_id = context.entity.get("id")
+
+    sg_url = f"https://keyring-studio.shotgrid.autodesk.com/page/{page_id}#Shot_{shot_id}"
+    webbrowser.open(sg_url)
+
+    return
+
+def get_shotgun_page_id(sg=None, project=None):
+
+    fields = ['name', 'project']
+    filters = [
+        ['name', 'is', 'Shots'],
+        ['project', 'is', project],
+    ]
+
+    page = sg.find_one('Page',
+                       filters=filters,
+                       fields=fields)
+    page_id = page.get('id')
+
+    return page_id
