@@ -4,9 +4,9 @@ from importlib import reload
 from PySide2 import QtWidgets, QtCore
 
 from CoreModules.handler import connect_sg
-from UI import ui_hoonie2
-from model import imported_model, pub_model
-from handler import maya_handler, shotgrid_handler, shader_importer
+from importABC.UI import ui_hoonie2
+from importABC.model import imported_model, pub_model
+from importABC.handler import maya_handler, shotgrid_handler, shader_importer
 
 # 모듈 리로드
 reload(connect_sg)
