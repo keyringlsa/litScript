@@ -23,6 +23,7 @@ def unreal_txt_import(sel, file_path, lkd_type) :
                                         # Example usage
                                         texture_path = txt_re  # 경로를 실제 텍스처 파일 경로로 변경하세요
                                         destination_path = f"/Game/{lkd_type}/{sel}/TEX"  # 프로젝트 내에서 텍스처를 저장할 경로
+                                        print(destination_path)
                                         import_texture_as_virtual_texture(texture_path, destination_path)
 
 
