@@ -6,9 +6,12 @@ import os
 
 def unreal_txt_import(sel, file_path, lkd_type) :
         yaml_file_path = file_path
-        sel_low = sel.lower()
-        lkd_type_low = lkd_type.lower()
 
+        sel_low = sel.lower()
+        if lkd_type == "Character":
+                lkd_type_low = "ch"
+        else:
+                lkd_type_low = lkd_type.lower()
 
         with open(yaml_file_path, 'r') as file:
                 shader_dict = yaml.full_load(file)
@@ -57,7 +60,12 @@ def import_texture(file_path, destination_path):
 def mtl_connect(sel, file_path, lkd_type):
         yaml_file_path = file_path
         sel_low = sel.lower()
-        lkd_type_low = lkd_type.lower()
+        if lkd_type == "Character" :
+                lkd_type_low = "ch"
+        else :
+                lkd_type_low = lkd_type.lower()
+
+
         material_package_path = f"/Game/project/asset/{lkd_type_low}/{sel_low}/mtl"
         text_package_path = f"/Game/project/asset/{lkd_type_low}/{sel_low}/tex"
         with open(yaml_file_path, 'r') as file:
