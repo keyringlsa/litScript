@@ -17,51 +17,38 @@ def unreal_txt_import(sel, file_path, lkd_type) :
                                 txt_path = row_data['textures']
 
                                 if txt_path:
-                                        txt_re = txt_path[0].replace("<UDIM>", "1001")
+                                        txt_re = txt_path[0].replace("<UDIM>", "{}")
                                         print(txt_re)
 
                                         # Example usage
-                                        texture_path = txt_re  # 경로를 실제 텍스처 파일 경로로 변경하세요
-                                        destination_path = f"/Game/{lkd_type}/{sel}/TEX"  # 프로젝트 내에서 텍스처를 저장할 경로
-                                        print(destination_path)
-                                        import_texture_as_virtual_texture(texture_path, destination_path)
+                                        udim_range = range(1001, 1050)  # UDIM의 범위
+                                        for udim in udim_range:
+                                                texture_path = txt_re.format(udim)
+                                                if os.path.exists(texture_path):
+                                                        destination_path = f"/Game/{lkd_type}/{sel}/TEX"  # 프로젝트 내에서 텍스처를 저장할 경로
+                                                        print(destination_path)
+                                                        import_texture(texture_path, destination_path)
+                                                        break  # 파일을 찾았으면 반복문을 종료합니다.
+
+                                # if txt_path:
+                                #
+                                #
+                                #         txt_re = txt_path[0].replace("<UDIM>", "1001")
+                                #         print(txt_re)
+                                #
+                                #         # Example usage
+                                #         texture_path = txt_re  # 경로를 실제 텍스처 파일 경로로 변경하세요
+                                #         destination_path = f"/Game/{lkd_type}/{sel}/TEX"  # 프로젝트 내에서 텍스처를 저장할 경로
+                                #         print(destination_path)
+                                #         import_texture(texture_path, destination_path)
 
 
+def import_texture(file_path, destination_path):
+
+        AssetTools = unreal.AssetToolsHelpers.get_asset_tools()
+        AssetImportTask = unreal.AssetImportTask()
+        AssetImportTask.set_editor_property('filename', file_path)
+        AssetImportTask.set_editor_property('destination_path', destination_path)
+        AssetTools.import_asset_tasks([AssetImportTask])
 
 
-
-def import_texture_as_virtual_texture(texture_path, destination_path):
-        # Create a new AssetTools helper
-        asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
-
-        # Specify the import task with the texture path
-        import_task = unreal.AssetImportTask()
-        import_task.filename = texture_path
-        import_task.destination_path = destination_path
-        import_task.automated = True
-        import_task.save = True
-
-        # Import the texture
-        asset_tools.import_asset_tasks([import_task])
-
-        # Get the imported asset
-        imported_asset_path = destination_path + "/" + unreal.Paths.get_base_filename(
-                texture_path)
-        texture = unreal.EditorAssetLibrary.load_asset(imported_asset_path)
-
-        if texture:
-                # Convert texture to virtual texture
-                convert_to_virtual_texture(texture)
-        else:
-                print(f"Failed to load the imported texture: {imported_asset_path}")
-
-
-def convert_to_virtual_texture(texture):
-        # Ensure the asset is of type Texture
-        if isinstance(texture, unreal.Texture):
-                texture.virtual_texture_streaming = True
-                texture.save_package()
-
-                print(f"Texture {texture.get_name()} converted to Virtual Texture.")
-        else:
-                print(f"The asset {texture.get_name()} is not a texture.")

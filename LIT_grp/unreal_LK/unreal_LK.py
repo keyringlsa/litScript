@@ -215,26 +215,51 @@ def run_main_maya():
     app.exec_()
 
 
-def main():
 
+
+
+def main():
     """
-        Create tool window.
-        """
-    #언리얼 실행 시
-    if QtWidgets.QApplication.instance():
-        # Id any current instances of tool and destroy
-        for win in (QtWidgets.QApplication.allWindows()):
-            if 'toolWindow' in win.objectName():  # update this name to match name below
-                win.destroy()
-    else:
-        QtWidgets.QApplication(sys.argv)
+    Create tool window.
+    """
+    app = QtWidgets.QApplication.instance()  # Check if QApplication instance exists
+    if not app:
+        app = QtWidgets.QApplication(sys.argv)
+
+    # Id any current instances of tool and destroy
+    for win in QtWidgets.QApplication.allWindows():
+        if 'toolWindow' in win.objectName():
+            win.destroy()
 
     # load UI into QApp instance
     Main.window = Main()
+    Main.window.setObjectName('toolWindow')  # Unique object name
+    Main.window.setWindowTitle('Sample Tool')
     Main.window.show()
-    Main.window.setObjectName('toolWindow')  # update this with something unique to your tool
-    Main.setWindowTitle('Sample Tool')
-    Main.parent_external_window_to_slate(Main.window.winId())
+
+
+
+
+# def main():
+#
+#     """
+#         Create tool window.
+#         """
+#     #언리얼 실행 시
+#     if QtWidgets.QApplication.instance():
+#         # Id any current instances of tool and destroy
+#         for win in (QtWidgets.QApplication.allWindows()):
+#             if 'toolWindow' in win.objectName():  # update this name to match name below
+#                 win.destroy()
+#     else:
+#         QtWidgets.QApplication(sys.argv)
+#
+#     # load UI into QApp instance
+#     Main.window = Main()
+#     Main.window.show()
+#     Main.window.setObjectName('toolWindow')  # update this with something unique to your tool
+#     Main.setWindowTitle('Sample Tool')
+#     Main.parent_external_window_to_slate(Main.window.winId())
 
 
 
