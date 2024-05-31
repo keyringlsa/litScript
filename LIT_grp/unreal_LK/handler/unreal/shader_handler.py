@@ -25,7 +25,7 @@ def unreal_txt_import(sel, file_path, lkd_type) :
                                         for udim in udim_range:
                                                 texture_path = txt_re.format(udim)
                                                 if os.path.exists(texture_path):
-                                                        destination_path = f"/Game/ASSET/{lkd_type}/{sel}/TEX"  # 프로젝트 내에서 텍스처를 저장할 경로
+                                                        destination_path = f"/Game/Project/ASSET/{lkd_type}/{sel}/TEX"  # 프로젝트 내에서 텍스처를 저장할 경로
                                                         print(destination_path)
                                                         import_texture(texture_path, destination_path)
                                                         break  # 파일을 찾았으면 반복문을 종료합니다.
