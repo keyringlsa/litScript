@@ -22,6 +22,13 @@ reload(file_model)
 reload(shader_handler)
 
 
+class Worker(QtCore.QObject):
+    finished = QtCore.Signal()
+
+    def run(self, function, *args):
+        function(*args)
+        self.finished.emit()
+
 
 class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 QMainWindow도 가능
 
@@ -151,6 +158,16 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
     ############################################### list tab
 
+    def run_long_task(self, function, *args):
+        self.thread = QtCore.QThread()
+        self.worker = Worker()
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(lambda: self.worker.run(function, *args))
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.thread.start()
+
 
 
     def unreal_txt_import(self):
@@ -228,6 +245,27 @@ def run_main_maya():
 
 
 
+# def main():
+#     """
+#     Create tool window.
+#     """
+#     app = QtWidgets.QApplication.instance()  # Check if QApplication instance exists
+#     if not app:
+#         app = QtWidgets.QApplication(sys.argv)
+#
+#     # Id any current instances of tool and destroy
+#     for win in QtWidgets.QApplication.allWindows():
+#         if 'toolWindow' in win.objectName():
+#             win.destroy()
+#
+#     # load UI into QApp instance
+#     Main.window = Main()
+#     Main.window.setObjectName('toolWindow')  # Unique object name
+#     Main.window.setWindowTitle('Sample Tool')
+#     Main.window.show()
+#     sys.exit(app.exec_())
+
+
 def main():
     """
     Create tool window.
@@ -246,7 +284,6 @@ def main():
     Main.window.setObjectName('toolWindow')  # Unique object name
     Main.window.setWindowTitle('Sample Tool')
     Main.window.show()
-
 
 
 
@@ -290,7 +327,7 @@ if __name__ == '__main__':
 import sys
 from pprint import pprint
 
-path = "Q:\lt_team\maya_scripts"
+path = "D:\lt_team\maya_scripts"
 sys.path.insert(0, path)
 
 from imp import reload 
