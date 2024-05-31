@@ -95,14 +95,14 @@ def mtl_connect(sel, file_path, lkd_type):
                                                                 pass
 
                                                         else:
-                                                        # Base Color 텍스처 설정
+                                                                # Base Color 텍스처 설정
 
-                                                        # 버츄얼 샘플러 타입으로 변경
-                                                        txt_expression.set_editor_property("sampler_type",
-                                                                                                  unreal.MaterialSamplerType.SAMPLERTYPE_VIRTUAL_COLOR)
-                                                        unreal.MaterialEditingLibrary.connect_material_property(
-                                                                txt_expression, "",
-                                                                unreal.MaterialProperty.MP_BASE_COLOR)
+                                                                # 버츄얼 샘플러 타입으로 변경
+                                                                txt_expression.set_editor_property("sampler_type",
+                                                                                                   unreal.MaterialSamplerType.SAMPLERTYPE_VIRTUAL_COLOR)
+                                                                unreal.MaterialEditingLibrary.connect_material_property(
+                                                                        txt_expression, "",
+                                                                        unreal.MaterialProperty.MP_BASE_COLOR)
 
 
                                                 elif txt_name.split('_')[-1] == "emi":
