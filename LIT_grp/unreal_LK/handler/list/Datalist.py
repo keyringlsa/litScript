@@ -75,7 +75,7 @@ def datalist(name, lkd_type) :
                     row_data['name'] = file_name
                     row_data['version'] = file_version
                     row_data['path'] = data
-                    print(row_data['path'])
+                    #print(row_data['path'])
                     row_datas.append(row_data)
 
 

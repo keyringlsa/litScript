@@ -66,7 +66,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
         # Export&Import
         self.ui.txt_imp.clicked.connect(self.unreal_txt_import)
-        #self.ui.import_All.clicked.connect(self.lkd_import)
+        self.ui.mtl_connet.clicked.connect(self.mtl_conncet)
 
 
 
@@ -169,6 +169,17 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
 
 
+    def mtl_conncet(self):
+        lkd_type = self.ui.LKD_type.currentText()
+        sel_shot = self.ui.lkdlist.currentIndex()
+        item_shot = self.file_dir_model.data(sel_shot, role=QtCore.Qt.UserRole)
+        sel = item_shot.name
+        sel_data = self.ui.datalist.currentIndex()
+        item = self.data_dir_model.data(sel_data, role=QtCore.Qt.UserRole)
+
+        if item:
+            file_path = item.path
+            shader_handler.mtl_connect(sel, file_path, lkd_type)
 
 
 
