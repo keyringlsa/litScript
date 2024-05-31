@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'unreal_LK_UILgcjXW.ui'
+## Form generated from reading UI file 'unreal_LK_UIVsavaM.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -17,20 +17,18 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(351, 681)
+        MainWindow.resize(378, 939)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.gridLayout = QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName(u"gridLayout")
+        self.verticalLayout = QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.line = QFrame(self.centralwidget)
         self.line.setObjectName(u"line")
         self.line.setFrameShape(QFrame.VLine)
         self.line.setFrameShadow(QFrame.Sunken)
 
-        self.gridLayout.addWidget(self.line, 0, 1, 1, 1)
+        self.verticalLayout.addWidget(self.line)
 
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
         self.LKD_type = QComboBox(self.centralwidget)
         self.LKD_type.addItem("")
         self.LKD_type.addItem("")
@@ -88,16 +86,17 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.datalayout)
 
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.Refresh_btn = QPushButton(self.centralwidget)
         self.Refresh_btn.setObjectName(u"Refresh_btn")
         self.Refresh_btn.setMinimumSize(QSize(0, 30))
 
-        self.verticalLayout_3.addWidget(self.Refresh_btn)
+        self.verticalLayout.addWidget(self.Refresh_btn)
 
+        self.fol_btn = QPushButton(self.centralwidget)
+        self.fol_btn.setObjectName(u"fol_btn")
+        self.fol_btn.setMinimumSize(QSize(0, 30))
 
-        self.verticalLayout.addLayout(self.verticalLayout_3)
+        self.verticalLayout.addWidget(self.fol_btn)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -122,13 +121,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
-
-        self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 351, 21))
+        self.menubar.setGeometry(QRect(0, 0, 378, 21))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -147,6 +143,7 @@ class Ui_MainWindow(object):
 
         self.Seach_name.setText(QCoreApplication.translate("MainWindow", u"seach :", None))
         self.Refresh_btn.setText(QCoreApplication.translate("MainWindow", u"Refresh", None))
+        self.fol_btn.setText(QCoreApplication.translate("MainWindow", u"folder_create", None))
         self.txt_imp.setText(QCoreApplication.translate("MainWindow", u"txt_imp", None))
         self.mtl_connet.setText(QCoreApplication.translate("MainWindow", u"mtl_connet", None))
     # retranslateUi

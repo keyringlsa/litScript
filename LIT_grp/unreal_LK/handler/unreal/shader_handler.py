@@ -170,3 +170,31 @@ def mtl_connect(sel, file_path, lkd_type):
 #         return material_list
 #
 
+def create_folder_in_unreal(sel, lkd_type):
+        sel_low = sel.lower()
+        if lkd_type == "Character":
+                lkd_type_low = "ch"
+        else:
+                lkd_type_low = lkd_type.lower()
+        bg_package_path = f"/Game/project/asset/{lkd_type_low}/{sel_low}/bp"
+        fbx_package_path = f"/Game/project/asset/{lkd_type_low}/{sel_low}/fbx"
+        material_package_path = f"/Game/project/asset/{lkd_type_low}/{sel_low}/mtl"
+        text_package_path = f"/Game/project/asset/{lkd_type_low}/{sel_low}/tex"
+
+        asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
+
+
+        paths_to_create = [
+                bg_package_path,
+                fbx_package_path,
+                material_package_path,
+                text_package_path
+        ]
+
+
+        for path in paths_to_create:
+                result = unreal.EditorAssetLibrary.make_directory(path)
+                if result:
+                        unreal.log('Successfully created folder: {}'.format(path))
+                else:
+                        unreal.log_error('Failed to create folder: {}'.format(path))

@@ -73,6 +73,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
         # Export&Import
         self.ui.txt_imp.clicked.connect(self.unreal_txt_import)
         self.ui.mtl_connet.clicked.connect(self.mtl_conncet)
+        self.ui.fol_btn.clicked.connect(self.create_folder_in_unreal)
 
 
 
@@ -198,6 +199,17 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
             shader_handler.mtl_connect(sel, file_path, lkd_type)
 
 
+    def create_folder_in_unreal(self):
+        lkd_type = self.ui.LKD_type.currentText()
+        sel_shot = self.ui.lkdlist.currentIndex()
+        item_shot = self.file_dir_model.data(sel_shot, role=QtCore.Qt.UserRole)
+        sel = item_shot.name
+        sel_data = self.ui.datalist.currentIndex()
+        item = self.data_dir_model.data(sel_data, role=QtCore.Qt.UserRole)
+
+        if item:
+            file_path = item.path
+            shader_handler.create_folder_in_unreal(sel, lkd_type)
 
 
 
@@ -327,7 +339,7 @@ if __name__ == '__main__':
 import sys
 from pprint import pprint
 
-path = "Q:\lt_team\maya_scripts"
+path = "D:\lt_team\maya_scripts"
 sys.path.insert(0, path)
 
 from imp import reload 
