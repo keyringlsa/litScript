@@ -280,7 +280,7 @@ if __name__ == '__main__':
 import sys
 from pprint import pprint
 
-path = "D:\lt_team\maya_scripts"
+path = "Q:\lt_team\maya_scripts"
 sys.path.insert(0, path)
 
 from imp import reload 
