@@ -104,7 +104,8 @@ def mtl_connect(sel, file_path, lkd_type):
                                                                 unreal.MaterialEditingLibrary.connect_material_property(
                                                                         txt_expression, "",
                                                                         unreal.MaterialProperty.MP_BASE_COLOR)
-                                                                pass
+                                                                unreal.EditorAssetLibrary.save_asset(
+                                                                        material.get_path_name())
 
                                                         else:
                                                                 # Base Color 텍스처 설정
@@ -115,7 +116,8 @@ def mtl_connect(sel, file_path, lkd_type):
                                                                 unreal.MaterialEditingLibrary.connect_material_property(
                                                                         txt_expression, "",
                                                                         unreal.MaterialProperty.MP_BASE_COLOR)
-
+                                                                unreal.EditorAssetLibrary.save_asset(
+                                                                        material.get_path_name())
 
                                                 elif txt_name.split('_')[-1] == "emi":
 
@@ -126,7 +128,7 @@ def mtl_connect(sel, file_path, lkd_type):
                                                         unreal.MaterialEditingLibrary.connect_material_property(
                                                                 txt_expression, "",
                                                                 unreal.MaterialProperty.MP_EMISSIVE_COLOR)
-
+                                                        unreal.EditorAssetLibrary.save_asset(material.get_path_name())
 
 
 
@@ -142,11 +144,11 @@ def mtl_connect(sel, file_path, lkd_type):
                                                         unreal.MaterialEditingLibrary.connect_material_property(
                                                                 txt_expression, "",
                                                                 unreal.MaterialProperty.MP_NORMAL)
-
+                                                        unreal.EditorAssetLibrary.save_asset(material.get_path_name())
                                                 else :
                                                         continue
 
-                                unreal.EditorAssetLibrary.save_asset(material.get_path_name())
+                                #unreal.EditorAssetLibrary.save_asset(material.get_path_name())
                                 print(f"Textures applied to material at: {material_path}")
 
 
