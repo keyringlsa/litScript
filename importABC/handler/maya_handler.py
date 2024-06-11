@@ -19,7 +19,7 @@ def import_alembic_file(row_data=None, context=None):
     namespace = name.split('_', 1)[0]
     asset_name = name.split('_', 1)[-1].split('__')[0]
     end_name = name.split('__')[-1]
-    if end_name == "FX.abc" or "CFX.abc"  :
+    if end_name == "FX.abc" or end_name == "CFX.abc":
         namespace = name.split('_', 1)[0]+"FX"
 
     else :
