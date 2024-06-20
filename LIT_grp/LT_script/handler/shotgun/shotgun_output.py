@@ -1,6 +1,6 @@
 
 from CoreModules.handler.connect_sg import Shotgun_Connect
-import sgtk
+import sgtk,os
 from pprint import pprint
 
 def shot_info() :
@@ -55,10 +55,16 @@ def shot_root():
     templates = toolkit.sgtk.templates
     #template_names = templates.keys() 사용 가능한 템플릿 키 확인
 
+    tk_context_str = str(toolkit.context).split(',')[0]
 
 
-    # 샷 경로
-    shot_root_template = templates["shot_root"]
+    if tk_context_str == 'lgt' :
+        # 샷 경로
+        shot_root_template = templates["shot_root"]
+
+    elif tk_context_str == 'lkd':
+        # 샷 경로
+        shot_root_template = templates["asset_root"]
 
     fields = tk_context.as_template_fields(shot_root_template)
 
@@ -77,25 +83,35 @@ def sequence_root():
     toolkit = sgtk.platform.current_engine()
     tk_context = toolkit.context
 
-
-
     templates = toolkit.sgtk.templates
-    #template_names = templates.keys() 사용 가능한 템플릿 키 확인
+    # template_names = templates.keys() 사용 가능한 템플릿 키 확인
 
+    tk_context_str = str(toolkit.context).split(',')[0]
 
+    if tk_context_str == 'lgt':
+        # 샷 경로
+        sequence_root_template = templates["sequence_root"]
+        fields = tk_context.as_template_fields(sequence_root_template)
 
-    # 샷 경로
-    sequence_root_template = templates["sequence_root"]
+        # 현재 컨텍스트에 대한 경로를 생성
+        sequence_root_path = sequence_root_template.apply_fields(fields)
 
-    fields = tk_context.as_template_fields(sequence_root_template)
+    elif tk_context_str == 'lkd':
+        # 샷 경로
+        sequence_root_template = templates["asset_root"]
+        fields = tk_context.as_template_fields(sequence_root_template)
 
-    #현재 컨텍스트에 대한 경로를 생성
-    sequence_root_path = sequence_root_template.apply_fields(fields)
+        # 현재 컨텍스트에 대한 경로를 생성
+        fields_str = str(sequence_root_template.apply_fields(fields)).split('\\')
+        sequence_root_path = os.path.join(fields_str[0], fields_str[1], fields_str[2], fields_str[3])
 
     # 'shot_root' 경로를 출력
     print("sequence root path:", sequence_root_path)
     sequence_root_info.append(sequence_root_path)
 
     return sequence_root_info
+
+
+sequence_root()
 
 
