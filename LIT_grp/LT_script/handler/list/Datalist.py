@@ -4,15 +4,11 @@ import re
 import maya.cmds as cmds
 
 
-def on_double_click(name):
+def on_double_click(name, seq_path):
 
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    file_dir_splitB = file_dir_split.split(os.sep)
 
-    root_path = os.path.join(file_dir_splitB[0], file_dir_splitB[1], file_dir_splitB[2], file_dir_splitB[3])
 
-    path = os.path.join(root_path,name)
+    path = os.path.join(seq_path,name)
 
     source_path = 'LGT/wip/maya/data'
     real_root = os.path.join(path, source_path).replace('\\', '/')
@@ -23,20 +19,16 @@ def on_double_click(name):
 
 
 
-def datalist(name) :
+def datalist(name, seq_path) :
     item = name
 
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    file_dir_splitB = file_dir_split.split(os.sep)
 
-    root_path = os.path.join(file_dir_splitB[0], file_dir_splitB[1], file_dir_splitB[2], file_dir_splitB[3])
 
     #litlist.py에 있던 configues를 아래로 변경처리
     datas = []
 
     source_path = 'LGT/wip/maya/data'
-    real_root = os.path.join(root_path, item, source_path).replace('\\', '/')
+    real_root = os.path.join(seq_path, item, source_path).replace('\\', '/')
     if os.path.isdir(real_root) and os.listdir(real_root):
 
         configues = glob(real_root + "/*")  # 특정 파일이 하고 싶은 경우 f포매팅f"/{item}_LGT_*_v*.json"

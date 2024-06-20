@@ -1,15 +1,13 @@
-def lit_export():
+def lit_export(shot_path):
     from maya.app.renderSetup.model import renderSetup
     import maya.cmds as cmds
     import json
     import os
 
-    print('lit_export()')
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    source_path = 'LGT/wip/maya/data'
 
-    root_path = os.path.join(file_dir_split, source_path).replace('\\', '/')
+    source_path = 'wip/maya/data'
+
+    root_path = os.path.join(shot_path, source_path).replace('\\', '/')
 
     scene_name = cmds.file(q=True, sceneName=True)
 
@@ -258,7 +256,7 @@ def lit_export():
 
 
 
-def lit_import(sel, file_name):
+def lit_import(sel, file_name, seq_path):
     from maya.app.renderSetup.model import renderSetup
     import mtoa.aovs as aovs
     import maya.cmds as cmds
@@ -266,14 +264,10 @@ def lit_import(sel, file_name):
     import os
 
 
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    file_dir_splitB = file_dir_split.split(os.sep)
 
-    root_path = os.path.join(file_dir_splitB[0], file_dir_splitB[1], file_dir_splitB[2], file_dir_splitB[3])
     item = sel
     source_path = 'LGT/wip/maya/data'
-    real_root = os.path.join(root_path, item, source_path).replace('\\', '/')
+    real_root = os.path.join(seq_path, item, source_path).replace('\\', '/')
 
     selected_item_mb = os.path.join(real_root, file_name+".json").replace('\\', '/')
 
@@ -383,20 +377,15 @@ def lit_import(sel, file_name):
 
 
 
-def lit_each_import(sel, file_name):
+def lit_each_import(sel, file_name, seq_path):
     print('each_import()')
     import maya.cmds as cmds
     import os
 
 
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    file_dir_splitB = file_dir_split.split(os.sep)
-
-    root_path = os.path.join(file_dir_splitB[0], file_dir_splitB[1], file_dir_splitB[2], file_dir_splitB[3])
     item = sel
     source_path = 'LGT/wip/maya/data'
-    real_root = os.path.join(root_path, item, source_path).replace('\\', '/')
+    real_root = os.path.join(seq_path, item, source_path).replace('\\', '/')
 
     lit_file = os.path.join(real_root, file_name+"_lit.mb").replace('\\', '/')
 
@@ -407,7 +396,7 @@ def lit_each_import(sel, file_name):
 
 
 
-def layer_each_import(sel, file_name):
+def layer_each_import(sel, file_name, seq_path):
 
     from maya.app.renderSetup.model import renderSetup
     import maya.cmds as cmds
@@ -415,14 +404,10 @@ def layer_each_import(sel, file_name):
     import os
 
 
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    file_dir_splitB = file_dir_split.split(os.sep)
 
-    root_path = os.path.join(file_dir_splitB[0], file_dir_splitB[1], file_dir_splitB[2], file_dir_splitB[3])
     item = sel
     source_path = 'LGT/wip/maya/data'
-    real_root = os.path.join(root_path, item, source_path).replace('\\', '/')
+    real_root = os.path.join(seq_path, item, source_path).replace('\\', '/')
 
     selected_item_mb = os.path.join(real_root, file_name+".json").replace('\\', '/')
 
@@ -437,7 +422,7 @@ def layer_each_import(sel, file_name):
 
 
 
-def aov_each_import(sel, file_name):
+def aov_each_import(sel, file_name, seq_path):
 
     import mtoa.aovs as aovs
     import maya.cmds as cmds
@@ -445,14 +430,9 @@ def aov_each_import(sel, file_name):
     import os
 
 
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    file_dir_splitB = file_dir_split.split(os.sep)
-
-    root_path = os.path.join(file_dir_splitB[0], file_dir_splitB[1], file_dir_splitB[2], file_dir_splitB[3])
     item = sel
     source_path = 'LGT/wip/maya/data'
-    real_root = os.path.join(root_path, item, source_path).replace('\\', '/')
+    real_root = os.path.join(seq_path, item, source_path).replace('\\', '/')
 
     ### 쉐이더 불러오기
     aovsh_file = os.path.join(real_root, file_name + "_aov.mb").replace('\\', '/')
@@ -512,7 +492,7 @@ def aov_each_import(sel, file_name):
 
 
 
-def rivet_imp(sel, file_name):
+def rivet_imp(sel, file_name, seq_path):
 
     import maya.cmds as cmds
     import json
@@ -655,7 +635,7 @@ def rivet_imp(sel, file_name):
 
 
 
-def set_imp(sel, file_name):
+def set_imp(sel, file_name, seq_path):
 
     import maya.cmds as cmds
     import json
@@ -666,14 +646,10 @@ def set_imp(sel, file_name):
     ###불러오기
 
 
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    file_dir_splitB = file_dir_split.split(os.sep)
 
-    root_path = os.path.join(file_dir_splitB[0], file_dir_splitB[1], file_dir_splitB[2], file_dir_splitB[3])
     item = sel
     source_path = 'LGT/wip/maya/data'
-    real_root = os.path.join(root_path, item, source_path).replace('\\', '/')
+    real_root = os.path.join(seq_path, item, source_path).replace('\\', '/')
 
     ### json 파일 불러오기
     set_file_path = os.path.join(real_root, file_name + "_set.json").replace('\\', '/')

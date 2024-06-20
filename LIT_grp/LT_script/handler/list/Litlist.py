@@ -4,15 +4,11 @@ import re
 import maya.cmds as cmds
 
 
-def make_file_structure():
+def make_file_structure(seq_path):
 
-    file_dir = cmds.file(q=True, sceneName=True)
-    file_dir_split = file_dir.split('LGT')[0].replace("/","\\")
-    file_dir_splitB = file_dir_split.split(os.sep)
 
-    root_path = os.path.join(file_dir_splitB[0], file_dir_splitB[1], file_dir_splitB[2], file_dir_splitB[3])
 
-    items = os.listdir(root_path)
+    items = os.listdir(seq_path)
 
     row_datas = list()
 
@@ -21,7 +17,7 @@ def make_file_structure():
         row_data = dict()
 
         source_path = 'LGT/wip/maya/data'
-        real_root = os.path.join(root_path, item, source_path).replace('\\', '/')
+        real_root = os.path.join(seq_path, item, source_path).replace('\\', '/')
 
         if not os.path.isdir(real_root):
             os.makedirs(real_root)

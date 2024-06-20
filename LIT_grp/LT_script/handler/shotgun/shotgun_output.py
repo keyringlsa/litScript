@@ -45,3 +45,57 @@ def shot_info() :
     return item
 
 
+def shot_root():
+    shot_root_info = []
+    toolkit = sgtk.platform.current_engine()
+    tk_context = toolkit.context
+
+
+
+    templates = toolkit.sgtk.templates
+    #template_names = templates.keys() 사용 가능한 템플릿 키 확인
+
+
+
+    # 샷 경로
+    shot_root_template = templates["shot_root"]
+
+    fields = tk_context.as_template_fields(shot_root_template)
+
+    #현재 컨텍스트에 대한 경로를 생성
+    shot_root_path = shot_root_template.apply_fields(fields)
+
+    # 'shot_root' 경로를 출력
+    print("Shot root path:", shot_root_path)
+    shot_root_info.append(shot_root_path)
+
+    return shot_root_info
+
+
+def sequence_root():
+    sequence_root_info = []
+    toolkit = sgtk.platform.current_engine()
+    tk_context = toolkit.context
+
+
+
+    templates = toolkit.sgtk.templates
+    #template_names = templates.keys() 사용 가능한 템플릿 키 확인
+
+
+
+    # 샷 경로
+    sequence_root_template = templates["sequence_root"]
+
+    fields = tk_context.as_template_fields(sequence_root_template)
+
+    #현재 컨텍스트에 대한 경로를 생성
+    sequence_root_path = sequence_root_template.apply_fields(fields)
+
+    # 'shot_root' 경로를 출력
+    print("sequence root path:", sequence_root_path)
+    sequence_root_info.append(sequence_root_path)
+
+    return sequence_root_info
+
+

@@ -5,9 +5,12 @@ import yaml
 from pprint import pprint
 
 def str_convert_pattern(shape_name):
+
     if '|' in shape_name:
+
         return "|".join(list(map(lambda x: f"*:{x}", shape_name.split("|"))))
     else:
+
         return f"*:{shape_name}"
 
 
@@ -43,13 +46,18 @@ def import_shader(row_data=None, target_geos=None):
                 assign_shapes = mat_dict["meshes"]
 
                 convert_shapes = cmds.ls(list(map(lambda x: str_convert_pattern(x), assign_shapes)))
+
+
                 filtered_shapes = [i for i in convert_shapes if i in target_shapes]
+                print("filtered_shapes",filtered_shapes)
 
                 # assign shader
-
+                print("preview_mtl",preview_mtl)
                 mtl = f"{shd_namespace}:{preview_mtl[0]}"
+
                 cmds.select(filtered_shapes, r=True)
                 cmds.hyperShade(assign=mtl)
+                b = cmds.listConnections(mtl, type='shadingEngine')
 
                 shadingEngine = cmds.listConnections(mtl, type='shadingEngine')[0]
 
@@ -61,6 +69,9 @@ def import_shader(row_data=None, target_geos=None):
                 #     cmds.connectAttr(f"{arnold_mtl_name}.outColor", f"{shadingEngine}.aiSurfaceShader")
 
     except:
+
+
+
         regular_shaders = shader_dict['materials']['regular_shader']
         dis_shaders = shader_dict['materials']['displacement_shader']
 

@@ -6,17 +6,12 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from LIT_grp.LT_script.ui import Lit_UI
 from LIT_grp.LT_script.handler.layer import layer_set
 from LIT_grp.LT_script.handler.lit import lit_set
-from LIT_grp.LT_script.handler.aov import aov_set
-from LIT_grp.LT_script.handler.aov import aov_make
+from LIT_grp.LT_script.handler.aov import aov_set, aov_make
 from LIT_grp.LT_script.handler.render import render_set
-from LIT_grp.LT_script.handler.list import Litlist
-from LIT_grp.LT_script.handler.list import Datalist
-from LIT_grp.LT_script.handler.list import export_import
-from LIT_grp.LT_script.handler.project import project_set
-from LIT_grp.LT_script.handler.project import project_list
-from LIT_grp.LT_script.model import Lit_model
-from LIT_grp.LT_script.model import file_model
-from LIT_grp.LT_script.model import project_model
+from LIT_grp.LT_script.handler.list import Litlist, Datalist, export_import
+from LIT_grp.LT_script.handler.project import project_set, project_list
+from LIT_grp.LT_script.model import Lit_model, file_model, project_model
+from LIT_grp.LT_script.handler.shotgun import shotgun_output
 
 
 reload(Lit_UI)
@@ -33,6 +28,7 @@ reload(export_import)
 reload(Lit_model)
 reload(file_model)
 reload(project_model)
+reload(shotgun_output)
 
 
 
@@ -54,6 +50,11 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
         self.data_dir_model = None
 
         self.project_dir_model = None
+
+
+        self.seq_path = shotgun_output.sequence_root()[0]
+        self.shot_path = shotgun_output.shot_root()[0]
+
 
         self.connected()
 
@@ -162,7 +163,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
     ############################################### list tab
 
     def set_model(self):
-        row_datas = Litlist.make_file_structure()
+        row_datas = Litlist.make_file_structure(self.seq_path)
         self.file_dir_model = Lit_model.litModel(row_datas=row_datas)
 
         self.ui.Shotlist.setModel(self.file_dir_model)
@@ -179,7 +180,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
         sel = self.ui.Shotlist.currentIndex()
         item = self.file_dir_model.data(sel, role=QtCore.Qt.UserRole)
 
-        Datalist.on_double_click(item.name)
+        Datalist.on_double_click(item.name, self.seq_path)
 
     def filter_shotlist(self):
 
@@ -204,7 +205,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
 
 
-        row_datas_file = Datalist.datalist(name)
+        row_datas_file = Datalist.datalist(name,self.seq_path)
         self.data_dir_model = file_model.fileModel(row_data=row_datas_file)
 
         self.ui.datalist.setModel(self.data_dir_model)
@@ -226,7 +227,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
     ############################################### list tab
 
     def lit_export(self):
-        export_import.lit_export()
+        export_import.lit_export(self.shot_path)
 
 
 
@@ -239,7 +240,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
         if item:
             file_name = item.name+"_v"+item.version
-            export_import.lit_import(sel, file_name)
+            export_import.lit_import(sel, file_name, self.seq_path)
 
 
 
@@ -269,7 +270,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
         if item:
             file_name = item.name + "_v" + item.version
-            export_import.lit_each_import(sel, file_name)
+            export_import.lit_each_import(sel, file_name, self.seq_path)
 
 
     def layer_each_import(self):
@@ -281,7 +282,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
         if item:
             file_name = item.name + "_v" + item.version
-            export_import.layer_each_import(sel, file_name)
+            export_import.layer_each_import(sel, file_name, self.seq_path)
 
     def aov_each_import(self):
         sel_shot = self.ui.Shotlist.currentIndex()
@@ -292,7 +293,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
         if item:
             file_name = item.name + "_v" + item.version
-            export_import.aov_each_import(sel, file_name)
+            export_import.aov_each_import(sel, file_name, self.seq_path)
 
     def rivet_imp(self):
         sel_shot = self.ui.Shotlist.currentIndex()
@@ -303,7 +304,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
         if item:
             file_name = item.name + "_v" + item.version
-            export_import.rivet_imp(sel, file_name)
+            export_import.rivet_imp(sel, file_name, self.seq_path)
 
 
 
@@ -316,7 +317,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
         if item:
             file_name = item.name + "_v" + item.version
-            export_import.set_imp(sel, file_name)
+            export_import.set_imp(sel, file_name, self.seq_path)
 
 
 
