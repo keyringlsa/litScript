@@ -161,3 +161,6 @@ def set_model(self):
             # 올바른 인덱스로 편집기 열기
             self.ui.publist.openPersistentEditor(combo_index)
             self.ui.publist.openPersistentEditor(button_index)
+
+
+

@@ -6,6 +6,7 @@ from LIT_grp.unreal_LK.ui import unreal_LK_UI
 
 from LIT_grp.unreal_LK.handler.list import Lkdlist, Datalist
 from LIT_grp.unreal_LK.handler.unreal import shader_handler
+from LIT_grp.unreal_LK.handler.shotgrid import shotgrid_handler
 
 
 from LIT_grp.unreal_LK.model import Lkd_model, file_model
@@ -14,7 +15,7 @@ from LIT_grp.unreal_LK.model import Lkd_model, file_model
 
 reload(unreal_LK_UI)
 
-
+reload(shotgrid_handler)
 reload(Lkdlist)
 reload(Datalist)
 reload(Lkd_model)
@@ -197,6 +198,19 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
         if item:
             file_path = item.path
             shader_handler.mtl_connect(sel, file_path, lkd_type)
+
+
+    def shader_assign(self):
+        row_dates = dict()
+        asset_datas = shotgrid_handler.get_category()
+        for name, datas in asset_datas.items():
+            asset_names = datas['name']
+
+            for asset in asset_names:
+                asset_name = asset
+                shaders = shotgrid_handler.get_published_shd_file(asset_name)
+                row_dates[asset_name]['shader'].extend(shaders)
+        print(row_dates)
 
 
     def create_folder_in_unreal(self):
