@@ -4,6 +4,7 @@ from pprint import pprint
 class MakeItem(object):
 
     def __init__(self, data_dict):
+        self.name = data_dict['name']
         self.type = data_dict['type']
 
 
@@ -28,12 +29,17 @@ class type_Model(QtCore.QAbstractItemModel):
     def __init__(self, row_datas=None, parent=None):
         QtCore.QAbstractItemModel.__init__(self, parent)
 
+        self.entri_datas = row_datas
         self.entri_data = []
         self.filtered_indices = []  # 검색 결과를 담을 리스트
 
-        for data_dict in row_datas.item():
-            item = MakeItem(data_dict)
+        self.organize_rowdatas()
+
+    def organize_rowdatas(self):
+        for asset_types, datas in self.entri_datas.items() :
+            item = MakeItem(datas)
             self.entri_data.append(item)
+
 
         # 모델 내부에 데이터가 변경될 때마다 뷰를 업데이트할 수 있도록 시그널 설정
         #self.dataChanged.connect(self.update_view)

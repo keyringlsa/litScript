@@ -9,21 +9,14 @@ require_paths = [
 for i in require_paths:
     sys.path.append(i)
 
-#import os, yaml, unreal
-import os, yaml
-from pprint import pprint
-import sgtk
+
 from CoreModules.handler import connect_sg
 
+def get_category(sg=None, project=None) :
+    # sgl = connect_sg.Shotgun_Connect()
+    # sg = sgl.default_script_auth()
 
-def get_category() :
-    sgl = connect_sg.Shotgun_Connect()
-    sg = sgl.default_script_auth()
 
-    #project = context.project
-    #entity = context.entity
-    project = {'type': 'Project', 'id': 749, 'name': 'DNFA'} # context.project
-    #entity = {'name': 'DNF45_0140', 'id': 3035, 'type': 'Shot'}  # context.entity
 
     requires_fields = sg.schema_field_read("Asset")
 
@@ -47,22 +40,21 @@ def get_category() :
                 asset_type_names[asset_type] = {'type': asset_type, 'name': []}
             asset_type_names[asset_type]['name'].append(asset_name)
 
-    pprint(asset_type_names)
+
 
     return asset_type_names
 
 
-get_category()
 
 
+def get_pub_datas(sg=None, project=None) :
+    # sgl = connect_sg.Shotgun_Connect()
+    # sg = sgl.default_script_auth()
 
-def get_pub_datas() :
-    sgl = connect_sg.Shotgun_Connect()
-    sg = sgl.default_script_auth()
+    # toolkit = sgtk.platform.current_engine()
 
-    toolkit = sgtk.platform.current_engine()
+    # project = {'type': 'Project', 'id': 749, 'name': 'DNFA'}
 
-    project = {'type': 'Project', 'id': 749, 'name': 'DNFA'}
 
     requires_fields = sg.schema_field_read('PublishedFile')
     filters = [
@@ -97,23 +89,21 @@ def get_pub_datas() :
             if fbx_name not in fbx_dict:
                 fbx_dict[fbx_name] = {"items": [fbx], "type": fbx_type, "task": {"name": "Motion Builder FBX"}}
 
-    pprint(fbx_dict)
 
     return fbx_dict
 
 
-get_pub_datas()
 
 
 
 
-def get_published_shd_file(asset_name):
-    sgl = connect_sg.Shotgun_Connect()
-    sg = sgl.default_script_auth()
+def get_published_shd_file(sg=None, project=None, asset_name=None):
+    # sgl = connect_sg.Shotgun_Connect()
+    # sg = sgl.default_script_auth()
+    #
+    # toolkit = sgtk.platform.current_engine()
 
-    toolkit = sgtk.platform.current_engine()
 
-    project = {'type': 'Project', 'id': 749, 'name': 'DNFA'}
 
 
 
