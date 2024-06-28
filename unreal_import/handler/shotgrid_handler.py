@@ -48,18 +48,12 @@ def get_category(sg=None, project=None) :
 
 
 def get_pub_datas(sg=None, project=None) :
-    # sgl = connect_sg.Shotgun_Connect()
-    # sg = sgl.default_script_auth()
-
-    # toolkit = sgtk.platform.current_engine()
-
-    # project = {'type': 'Project', 'id': 749, 'name': 'DNFA'}
 
 
     requires_fields = sg.schema_field_read('PublishedFile')
     filters = [
         ['project', 'is', project],
-        #['entity', 'name_is', asset_name],
+
         {
             "filter_operator": "any",
             "filters": [
@@ -98,11 +92,6 @@ def get_pub_datas(sg=None, project=None) :
 
 
 def get_published_shd_file(sg=None, project=None, asset_name=None):
-    # sgl = connect_sg.Shotgun_Connect()
-    # sg = sgl.default_script_auth()
-    #
-    # toolkit = sgtk.platform.current_engine()
-
 
 
 
@@ -127,7 +116,7 @@ def get_published_shd_file(sg=None, project=None, asset_name=None):
                        filters=filters,
                        fields=list(requires_fields.keys()))
 
-    # filtered not shade yaml files
+
     filtering_shade_yaml_files = list()
 
     for pub in sg_found:

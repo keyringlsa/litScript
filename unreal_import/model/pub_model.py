@@ -20,9 +20,9 @@ class PubItem(object):
         self.all_versions = all_versions
         self.parent = parent
         self.children = []
-        self.file_type = file_type # for import action
-        self.data_type = data_type # for item delegate
-        self.p_row = p_row # for background color role
+        self.file_type = file_type
+        self.data_type = data_type
+        self.p_row = p_row
         self.prefix = None
 
         if self.current_version is not None:

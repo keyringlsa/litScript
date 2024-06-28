@@ -37,11 +37,11 @@ class Worker(QtCore.QObject):
         self.finished.emit()
 
 
-class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 QMainWindow도 가능
+class Main(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):  # parent는 반드시 None
         super(Main, self).__init__(parent)
-        # 혹은 QtWidgets.QWidget.__init__(parent)도 가능하다.
+
 
         self.ui = unreal_asset_UI.Ui_MainWindow()  # UI 클래스로 선언
         self.ui.setupUi(self)  # setup
@@ -51,7 +51,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
         self.sg = sgl.default_script_auth()
 
 
-        # get current context
+
         current_engine = sgtk.platform.current_engine()
         self.context = current_engine.context
         self.project = self.context.project
@@ -223,9 +223,6 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
                 if third_row_data.data_type == "GEO":
                     target_meshes.append(third_row_data.name)
 
-        # print(f"shader is {shader_row_data.name}")
-        # print(f"asset name is {asset_name}")
-        # print(target_meshes)
 
         shader_importer.import_shader(row_data=shader_row_data, target_type=sel_type, imported_ver=imported_ver)
 
@@ -249,7 +246,7 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
         for i in sel_data:
             if i.prefix != '__MAT':
                 pass
-                #maya_handler.select_imported_item(i)
+
 
 
     def create_folder_in_unreal(self):
@@ -263,41 +260,6 @@ class Main(QtWidgets.QMainWindow):  # 이 예제에서는 QWidget을 쓰지만 Q
 
 
 
-def run_main_maya():
-    from maya import OpenMayaUI as mui
-    from shiboken2 import wrapInstance
-    mayaMainWindowPtr = mui.MQtUtil.mainWindow()
-    mayaMainWindow = wrapInstance(int(mayaMainWindowPtr), QtWidgets.QMainWindow) #int는 윈도우 os일때 붙인다.
-
-    global app
-    app = QtWidgets.QApplication.instance()
-    excute_main = Main(mayaMainWindow)
-    excute_main.show()
-    app.exec_()
-
-
-
-
-
-# def main():
-#     """
-#     Create tool window.
-#     """
-#     app = QtWidgets.QApplication.instance()  # Check if QApplication instance exists
-#     if not app:
-#         app = QtWidgets.QApplication(sys.argv)
-#
-#     # Id any current instances of tool and destroy
-#     for win in QtWidgets.QApplication.allWindows():
-#         if 'toolWindow' in win.objectName():
-#             win.destroy()
-#
-#     # load UI into QApp instance
-#     Main.window = Main()
-#     Main.window.setObjectName('toolWindow')  # Unique object name
-#     Main.window.setWindowTitle('Sample Tool')
-#     Main.window.show()
-#     sys.exit(app.exec_())
 
 
 def main():
@@ -308,12 +270,12 @@ def main():
     if not app:
         app = QtWidgets.QApplication(sys.argv)
 
-    # Id any current instances of tool and destroy
+
     for win in QtWidgets.QApplication.allWindows():
         if 'toolWindow' in win.objectName():
             win.destroy()
 
-    # load UI into QApp instance
+
     Main.window = Main()
     Main.window.setObjectName('toolWindow')  # Unique object name
     Main.window.setWindowTitle('Unporter')
@@ -321,32 +283,10 @@ def main():
 
 
 
-# def main():
-#
-#     """
-#         Create tool window.
-#         """
-#     #언리얼 실행 시
-#     if QtWidgets.QApplication.instance():
-#         # Id any current instances of tool and destroy
-#         for win in (QtWidgets.QApplication.allWindows()):
-#             if 'toolWindow' in win.objectName():  # update this name to match name below
-#                 win.destroy()
-#     else:
-#         QtWidgets.QApplication(sys.argv)
-#
-#     # load UI into QApp instance
-#     Main.window = Main()
-#     Main.window.show()
-#     Main.window.setObjectName('toolWindow')  # update this with something unique to your tool
-#     Main.setWindowTitle('Sample Tool')
-#     Main.parent_external_window_to_slate(Main.window.winId())
-
-
 
 if __name__ == '__main__':
     main()
-    #run_main_maya()
+
 
 
 

@@ -66,16 +66,16 @@ def import_fbx_to_unreal(fbx_file_path, destination_path, asset_type):
     # FBX 임포트 설정
     options = unreal.FbxImportUI()
 
-    # 스켈레톤 메쉬 설정
+    # 스켈레톤 메쉬 설정인데 추후 리깅 껄로 테스트해봐야함 아직 베타
     skeletal_list = ["ch", "prop"]
     if asset_type in skeletal_list:
         options = buildSkeletalMeshImportOptions(options)  # buildSkeletalMeshImportOptions 함수의 반환 값을 할당
-        print("타입은 스켈레탈")
+
     else:
         options = buildStaticMeshImportOptions(options)  # buildStaticMeshImportOptions 함수의 반환 값을 할당
-        print("타입은 스태틱")
 
-    task.options = options  # options를 task.options에 할당
+
+    task.options = options
 
     unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks([task])
 
@@ -112,7 +112,7 @@ def buildSkeletalMeshImportOptions(options):
 
 
 def move_materials(destination_path, material_package_path):
-    # 가져온 경로에서 머티리얼 파일을 찾아 mtl 폴더로 이동
+
     asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
     assets = asset_registry.get_assets_by_path(destination_path, recursive=True)
 
@@ -133,11 +133,9 @@ def move_materials(destination_path, material_package_path):
 
 
 def import_pub_item(row_data=None, type_datas=None):
-    # current_version = row_data.current_version
+
     obj_name = row_data.name
-    # task = row_data.task
     version = row_data.version
-    # id = row_data.id
 
     asset_type = shader_importer.convert_type(type_datas)
 

@@ -14,7 +14,7 @@ class MakeItem(object):
 
     def show_info(self):
 
-        #print(self.name)
+
 
         if self.type:
             print(self.type)
@@ -41,8 +41,6 @@ class type_Model(QtCore.QAbstractItemModel):
             self.entri_data.append(item)
 
 
-        # 모델 내부에 데이터가 변경될 때마다 뷰를 업데이트할 수 있도록 시그널 설정
-        #self.dataChanged.connect(self.update_view)
 
     def update_view(self, topLeft, bottomRight):
         # 모델 내부의 데이터가 변경되면 뷰를 업데이트
@@ -102,9 +100,6 @@ class type_Model(QtCore.QAbstractItemModel):
 
 
 
-        # row = index.row()
-        # # column = index.column()
-        # item = self.entri_data[row]
 
         if role == QtCore.Qt.DisplayRole:
             return item.type

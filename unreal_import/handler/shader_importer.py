@@ -77,15 +77,15 @@ def import_tex(asset_name, version, yaml_file_path, asset_type):
                         txt_re = txt_path.replace("<UDIM>", "{}")
 
 
-                        # Example usage
-                        udim_range = range(1001, 1050)  # UDIM의 범위
+
+                        udim_range = range(1001, 1050)  # UDIM의 범위, 추후 조정 가능
                         for udim in udim_range:
                             texture_path = txt_re.format(udim)
                             if os.path.exists(texture_path):
                                 destination_path = f"/Game/project/asset/{asset_type}/{asset_name}/tex/v{version:03d}"  # 프로젝트 내에서 텍스처를 저장할 경로
                                 print(destination_path)
                                 import_texture(texture_path, destination_path)
-                                break  # 파일을 찾았으면 반복문을 종료합니다.
+                                break
 
 
 
@@ -108,7 +108,7 @@ def mtl_connect(asset_name, version, yaml_file_path, asset_type, imported_data):
 
     material_package_path = f"/Game/project/asset/{asset_type}/{asset_name}/mtl/v{imported_data:03d}"
     text_package_path = f"/Game/project/asset/{asset_type}/{asset_name}/tex/v{version:03d}"
-
+    #어셋팀에서 텍스쳐 네이밍 정리해주면 추후 맞춰서 추가 될 것임
     tex_filter = {"basecolor": ["baseColor", "diff", "dif", "diffuse"],
                   "normal": ["normal", "nor"],
                   "roughness": ["roughness", "rou"],
@@ -191,7 +191,7 @@ def mtl_connect(asset_name, version, yaml_file_path, asset_type, imported_data):
                                 unreal.MaterialProperty.MP_EMISSIVE_COLOR)
 
 
-
+                        #다른 연결 세팅도 추가될 예정
 
 
 
