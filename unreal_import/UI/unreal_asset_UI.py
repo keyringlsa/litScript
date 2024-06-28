@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'unreal_asset_UIueDvfC.ui'
+## Form generated from reading UI file 'unreal_asset_UIcqBkhm.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1427, 699)
+        MainWindow.resize(1635, 736)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
@@ -37,7 +37,9 @@ class Ui_MainWindow(object):
         self.asset_type.setMaximumSize(QSize(16777215, 150))
         font = QFont()
         font.setFamily(u"\ub098\ub214\uace0\ub515")
-        font.setPointSize(10)
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(75)
         self.asset_type.setFont(font)
 
         self.verticalLayout.addWidget(self.asset_type)
@@ -53,7 +55,10 @@ class Ui_MainWindow(object):
         self.Seach_input = QLineEdit(self.centralwidget)
         self.Seach_input.setObjectName(u"Seach_input")
         self.Seach_input.setMinimumSize(QSize(0, 30))
-        self.Seach_input.setFont(font)
+        font1 = QFont()
+        font1.setFamily(u"\ub098\ub214\uace0\ub515")
+        font1.setPointSize(11)
+        self.Seach_input.setFont(font1)
 
         self.horizontalLayout.addWidget(self.Seach_input)
 
@@ -95,9 +100,6 @@ class Ui_MainWindow(object):
         self.asset_list.setSizePolicy(sizePolicy1)
         self.asset_list.setMinimumSize(QSize(0, 0))
         self.asset_list.setSizeIncrement(QSize(500, 0))
-        font1 = QFont()
-        font1.setFamily(u"\ub098\ub214\uace0\ub515")
-        font1.setPointSize(11)
         self.asset_list.setFont(font1)
 
         self.horizontalLayout_12.addWidget(self.asset_list)
@@ -108,7 +110,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1427, 21))
+        self.menubar.setGeometry(QRect(0, 0, 1635, 21))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")

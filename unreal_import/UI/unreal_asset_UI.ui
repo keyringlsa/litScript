@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1427</width>
-    <height>699</height>
+    <width>1635</width>
+    <height>736</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,9 @@
           <property name="font">
            <font>
             <family>나눔고딕</family>
-            <pointsize>10</pointsize>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
            </font>
           </property>
          </widget>
@@ -73,7 +75,7 @@
             <property name="font">
              <font>
               <family>나눔고딕</family>
-              <pointsize>10</pointsize>
+              <pointsize>11</pointsize>
              </font>
             </property>
            </widget>
@@ -165,7 +167,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1427</width>
+     <width>1635</width>
      <height>21</height>
     </rect>
    </property>

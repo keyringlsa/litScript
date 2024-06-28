@@ -292,9 +292,9 @@ class PubItemTreeModel(QtCore.QAbstractItemModel):
         elif role == QtCore.Qt.SizeHintRole:
             if column == 0:
                 if item.p_row == 3:
-                    return QtCore.QSize(200, 60)
+                    return QtCore.QSize(200, 80)
                 elif item.p_row == 5:
-                    return QtCore.QSize(200, 60)
+                    return QtCore.QSize(200, 80)
                 else:
                     return QtCore.QSize(200, 25)
 
