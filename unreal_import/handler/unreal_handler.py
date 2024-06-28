@@ -1,7 +1,6 @@
 
-import unreal
-import yaml
-import os
+import unreal, yaml, os
+
 from imp import reload
 from unreal_import.handler import shader_importer
 reload(shader_importer)
@@ -144,9 +143,71 @@ def import_pub_item(row_data=None, type_datas=None):
 
     fbx_file_path = row_data.file_path
     destination_path = f"/Game/project/asset/{asset_type}/{obj_name}/fbx/v{version:03d}"
+    blueprint_path = f"/Game/project/asset/{asset_type}/{obj_name}/bp/v{version:03d}"
     imported_assets = import_fbx_to_unreal(fbx_file_path, destination_path, asset_type)
+
+
 
     # 머티리얼을 mtl 폴더로 이동
     material_package_path = f"/Game/project/asset/{asset_type}/{obj_name}/mtl/v{version:03d}"
     move_materials(destination_path, material_package_path)
 
+    create_blueprint(blueprint_path, obj_name, version, imported_assets)
+
+
+
+
+def create_blueprint(blueprint_path, obj_name, version, imported_assets):
+    if not unreal.EditorAssetLibrary.does_directory_exist(blueprint_path):
+        unreal.EditorAssetLibrary.make_directory(blueprint_path)
+
+    asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
+    SDS = unreal.get_engine_subsystem(unreal.SubobjectDataSubsystem)
+    blueprint_name = f"{obj_name}_v{version:03d}"
+    blueprint_full_path = f"{blueprint_path}/{blueprint_name}"
+
+    if not unreal.EditorAssetLibrary.does_asset_exist(blueprint_full_path):
+        new_bp = create_actor_blueprint(blueprint_name, blueprint_path, imported_assets, asset_tools, SDS)
+        unreal.EditorAssetLibrary.save_loaded_asset(new_bp)
+
+def add_component(root_data_handle, subsystem, blueprint, new_class, name):
+    BFL = unreal.SubobjectDataBlueprintFunctionLibrary
+
+    sub_handle, fail_reason = subsystem.add_new_subobject(
+        params=unreal.AddNewSubobjectParams(
+            parent_handle=root_data_handle,
+            new_class=new_class,
+            blueprint_context=blueprint
+        )
+    )
+    if not fail_reason.is_empty():
+        raise Exception(f"ERROR from sub_object_subsystem.add_new_subobject: {fail_reason}")
+
+    subsystem.rename_subobject(handle=sub_handle, new_name=unreal.Text(name))
+    subsystem.attach_subobject(owner_handle=root_data_handle, child_to_add_handle=sub_handle)
+    obj = BFL.get_object(BFL.get_data(sub_handle))
+    return sub_handle, obj
+
+def create_actor_blueprint(asset_name, asset_dir, imported_assets, asset_tools, SDS):
+    factory = unreal.BlueprintFactory()
+    factory.set_editor_property("parent_class", unreal.Actor)
+    blueprint = asset_tools.create_asset(asset_name, asset_dir, None, factory)
+    root_data_handle = SDS.k2_gather_subobject_data_for_blueprint(blueprint)[0]
+    scene_handle, scene = add_component(root_data_handle, SDS, blueprint, unreal.SceneComponent, name="DefaultSceneRoot")
+
+    for asset_path in imported_assets:
+        asset_data = unreal.EditorAssetLibrary.find_asset_data(f"{asset_path}")
+        mesh = asset_data.get_asset()
+        mesh_name = asset_data.asset_name
+        sub_handle, weight = add_component(
+            scene_handle,
+            subsystem=SDS,
+            blueprint=blueprint,
+            new_class=unreal.StaticMeshComponent,
+            name=mesh_name
+        )
+        assert isinstance(weight, unreal.StaticMeshComponent)
+        weight.set_static_mesh(mesh)
+        weight.set_editor_property(name="relative_location", value=unreal.Vector(10.0, -165.0, 640.0))
+
+    return blueprint
