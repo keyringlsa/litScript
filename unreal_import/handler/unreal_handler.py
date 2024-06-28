@@ -69,10 +69,10 @@ def import_fbx_to_unreal(fbx_file_path, destination_path, asset_type):
     # 스켈레톤 메쉬 설정인데 추후 리깅 껄로 테스트해봐야함 아직 베타
     skeletal_list = ["ch", "prop"]
     if asset_type in skeletal_list:
-        options = buildSkeletalMeshImportOptions(options)  # buildSkeletalMeshImportOptions 함수의 반환 값을 할당
+        options = buildSkeletalMeshImportOptions(options)
 
     else:
-        options = buildStaticMeshImportOptions(options)  # buildStaticMeshImportOptions 함수의 반환 값을 할당
+        options = buildStaticMeshImportOptions(options)
 
 
     task.options = options
