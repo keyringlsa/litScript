@@ -238,7 +238,7 @@ class PubItemTreeModel(QtCore.QAbstractItemModel):
         elif role == QtCore.Qt.BackgroundColorRole:
             if item.p_row == 1:
                 if column == 0:
-                    dark_blue = QtGui.QColor(22, 51, 84)
+                    dark_blue = QtGui.QColor(27, 20, 22)
                     dark_gray = QtGui.QColor(44, 44, 44)
 
                     gradient = QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(1, 0))
