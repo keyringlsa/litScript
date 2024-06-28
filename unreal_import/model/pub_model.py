@@ -8,9 +8,9 @@ VERSION_CHANGE_ROLE = QtCore.Qt.UserRole + 1
 VERSION_CHECK_ROLE = QtCore.Qt.UserRole + 2
 
 ICON_PATH = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0] + '/icons'
-CAM_ICON = os.path.join(ICON_PATH, 'camera.svg')
-MESH_ICON = os.path.join(ICON_PATH, 'mesh.svg')
-SHADER_ICON = os.path.join(ICON_PATH, 'shader_ball.png')
+
+MESH_ICON = os.path.join(ICON_PATH, 'mesh.png')
+SHADER_ICON = os.path.join(ICON_PATH, 'shader.png')
 
 
 class PubItem(object):
@@ -284,9 +284,7 @@ class PubItemTreeModel(QtCore.QAbstractItemModel):
             if column == 0:
                 if item.prefix == '__MAT':
                     return QtGui.QPixmap(SHADER_ICON).scaled(QtCore.QSize(50, 50), QtCore.Qt.KeepAspectRatio)
-                elif item.prefix == '__CAM':
-                    return QtGui.QPixmap(CAM_ICON).scaled(
-                        QtCore.QSize(50, 50), QtCore.Qt.KeepAspectRatio)
+
                 elif item.data_type == 'GEO':
                     return QtGui.QPixmap(MESH_ICON).scaled(
                         QtCore.QSize(50, 50), QtCore.Qt.KeepAspectRatio)
