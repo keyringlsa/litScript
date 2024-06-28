@@ -144,6 +144,9 @@ def mtl_connect(asset_name, version, yaml_file_path, asset_type, imported_data):
                         print(f"Material not found at: {material_path}")
                         return
 
+                    unreal.MaterialEditingLibrary.delete_all_material_expressions(material)
+
+
                     color_texture = unreal.EditorAssetLibrary.load_asset(
                         txt_real_path)
                     if color_texture:
@@ -203,12 +206,17 @@ def mtl_connect(asset_name, version, yaml_file_path, asset_type, imported_data):
                             continue
 
 
-                        unreal.EditorAssetLibrary.save_asset(material_path)
+                        unreal.EditorAssetLibrary.save_asset(material_path, only_if_is_dirty=False)
+                        #unreal.EditorAssetLibrary.save_asset(material_path)
 
 
 
 
             print(f"Textures applied to material at: {material_path}")
+
+
+
+
 
 
 
