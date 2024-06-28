@@ -13,9 +13,6 @@ for i in require_paths:
 from CoreModules.handler import connect_sg
 
 def get_category(sg=None, project=None) :
-    # sgl = connect_sg.Shotgun_Connect()
-    # sg = sgl.default_script_auth()
-
 
 
     requires_fields = sg.schema_field_read("Asset")
@@ -29,7 +26,7 @@ def get_category(sg=None, project=None) :
                               fields=list(requires_fields.keys()),
                               filter_operator='and')
 
-    # 'sg_asset_type'의 타입 및 그룹화
+
 
     asset_type_names = {}
     for asset in found_pub_files:
