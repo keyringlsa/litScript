@@ -3,7 +3,7 @@ import os
 from PySide2 import QtCore, QtGui, QtWidgets
 
 
-HORIZONTAL_HEADERS = ['name', 'artist', 'created_date', 'description', 'version', 'versions', 'import', 'prefix']
+HORIZONTAL_HEADERS = ['name', 'artist', 'created_date', 'description', 'version', 'versions', 'import']
 VERSION_CHANGE_ROLE = QtCore.Qt.UserRole + 1
 VERSION_CHECK_ROLE = QtCore.Qt.UserRole + 2
 
@@ -250,7 +250,7 @@ class PubItemTreeModel(QtCore.QAbstractItemModel):
 
             elif item.p_row == 2:
                 if column == 0:
-                    dark_cyan = QtGui.QColor(22, 100, 100)
+                    dark_cyan = QtGui.QColor(88, 100, 100)
                     dark_gray = QtGui.QColor(44, 44, 44)
 
                     gradient = QtGui.QLinearGradient(QtCore.QPointF(0, 0), QtCore.QPointF(1, 0))
@@ -262,7 +262,7 @@ class PubItemTreeModel(QtCore.QAbstractItemModel):
 
             elif item.p_row == 4:
                 if column == 0:
-                    dark_cyan = QtGui.QColor(88, 100, 100)
+                    dark_cyan = QtGui.QColor(130, 40, 40)
                     dark_gray = QtGui.QColor(44, 44, 44)
 
 
