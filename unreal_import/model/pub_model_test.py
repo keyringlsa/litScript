@@ -1,4 +1,4 @@
-# Author lt_hyunyong_ki in 2024 02 19
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
 
