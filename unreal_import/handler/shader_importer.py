@@ -124,10 +124,23 @@ def mtl_connect(asset_name, version, yaml_file_path, asset_type, imported_data):
 
     for shader_list in shader_dict['shading_engines']:
         for sh_name, row_data in shader_list.items():
-            mat_name = row_data['mat'][0]
+            mat_names = row_data.get('mat', [])
 
+            if not mat_names:
+                continue
 
-            txt_paths = row_data['textures']
+            mat_name = mat_names[0]
+            txt_paths = row_data.get('textures', [])
+
+            material_path = f"{material_package_path}/{mat_name}"
+            material = unreal.EditorAssetLibrary.load_asset(material_path)
+
+            if not material:
+                print(f"Material not found at: {material_path}")
+                return
+
+            unreal.MaterialEditingLibrary.delete_all_material_expressions(material)
+
             if txt_paths:
                 for txt_path in txt_paths:
                     txt_base_name = os.path.basename(txt_path)
@@ -136,15 +149,6 @@ def mtl_connect(asset_name, version, yaml_file_path, asset_type, imported_data):
                     file_ext = txt_base_name.split('.')[-1]
 
                     txt_real_path = f"{text_package_path}/{txt_name}"
-
-                    material_path = f"{material_package_path}/{mat_name}"
-
-                    material = unreal.EditorAssetLibrary.load_asset(material_path)
-                    if not material:
-                        print(f"Material not found at: {material_path}")
-                        return
-
-                    unreal.MaterialEditingLibrary.delete_all_material_expressions(material)
 
 
                     color_texture = unreal.EditorAssetLibrary.load_asset(
@@ -206,9 +210,15 @@ def mtl_connect(asset_name, version, yaml_file_path, asset_type, imported_data):
                             continue
 
 
-                        unreal.EditorAssetLibrary.save_asset(material_path, only_if_is_dirty=False)
-                        #unreal.EditorAssetLibrary.save_asset(material_path)
+                    unreal.EditorAssetLibrary.save_asset(material_path, only_if_is_dirty=False)
 
+                    unreal.MaterialEditingLibrary.recompile_material(material)
+                    unreal.EditorAssetLibrary.save_loaded_asset(material)
+
+                #캐시 정리
+                unreal.SystemLibrary.execute_console_command(None, 'r.ShaderCompiler.CacheCleanup')
+                unreal.SystemLibrary.execute_console_command(None, 'RecompileShaders Changed')
+                unreal.EditorAssetLibrary.sync_browser_to_objects([f"{material_path}"])
 
 
 

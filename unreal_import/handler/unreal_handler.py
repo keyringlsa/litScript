@@ -55,8 +55,7 @@ def already_exists_files(sel):
 
 
 
-def import_fbx_to_unreal(fbx_file_path, destination_path):
-    # FBX 임포트 태스크 생성
+def import_fbx_to_unreal(fbx_file_path, destination_path, asset_type):
     task = unreal.AssetImportTask()
     task.filename = fbx_file_path
     task.destination_path = destination_path
@@ -66,18 +65,50 @@ def import_fbx_to_unreal(fbx_file_path, destination_path):
 
     # FBX 임포트 설정
     options = unreal.FbxImportUI()
-    options.import_as_skeletal = False
-    options.import_animations = False
-    options.static_mesh_import_data.combine_meshes = False
 
-    task.options = options
+    # 스켈레톤 메쉬 설정
+    skeletal_list = ["ch", "prop"]
+    if asset_type in skeletal_list:
+        options = buildSkeletalMeshImportOptions(options)  # buildSkeletalMeshImportOptions 함수의 반환 값을 할당
+        print("타입은 스켈레탈")
+    else:
+        options = buildStaticMeshImportOptions(options)  # buildStaticMeshImportOptions 함수의 반환 값을 할당
+        print("타입은 스태틱")
 
-    # FBX 파일 임포트 실행
+    task.options = options  # options를 task.options에 할당
+
     unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks([task])
 
-    # 가져온 에셋 경로 반환
     imported_assets = task.get_editor_property('imported_object_paths')
     return imported_assets
+
+def buildStaticMeshImportOptions(options):
+    options.set_editor_property('import_mesh', True)
+    options.set_editor_property('import_textures', False)
+    options.set_editor_property('import_materials', False)
+    options.set_editor_property('import_as_skeletal', False)  # Static Mesh
+    options.static_mesh_import_data.set_editor_property('import_translation', unreal.Vector(0.0, 0.0, 0.0))
+    options.static_mesh_import_data.set_editor_property('import_rotation', unreal.Rotator(0.0, 0.0, 0.0))
+    options.static_mesh_import_data.set_editor_property('import_uniform_scale', 1.0)
+    options.static_mesh_import_data.set_editor_property('combine_meshes', False)
+    options.static_mesh_import_data.set_editor_property('generate_lightmap_u_vs', True)
+    options.static_mesh_import_data.set_editor_property('auto_generate_collision', True)
+    return options
+
+def buildSkeletalMeshImportOptions(options):
+    options.set_editor_property('import_mesh', True)
+    options.set_editor_property('import_textures', True)
+    options.set_editor_property('import_materials', True)
+    options.set_editor_property('import_as_skeletal', True)  # Skeletal Mesh
+    options.skeletal_mesh_import_data.set_editor_property('import_translation', unreal.Vector(0.0, 0.0, 0.0))
+    options.skeletal_mesh_import_data.set_editor_property('import_rotation', unreal.Rotator(0.0, 0.0, 0.0))
+    options.skeletal_mesh_import_data.set_editor_property('import_uniform_scale', 1.0)
+    options.skeletal_mesh_import_data.set_editor_property('import_morph_targets', True)
+    options.skeletal_mesh_import_data.set_editor_property('update_skeleton_reference_pose', False)
+    return options
+
+
+
 
 
 def move_materials(destination_path, material_package_path):
@@ -115,11 +146,9 @@ def import_pub_item(row_data=None, type_datas=None):
 
     fbx_file_path = row_data.file_path
     destination_path = f"/Game/project/asset/{asset_type}/{obj_name}/fbx/v{version:03d}"
-    imported_assets = import_fbx_to_unreal(fbx_file_path, destination_path)
+    imported_assets = import_fbx_to_unreal(fbx_file_path, destination_path, asset_type)
 
     # 머티리얼을 mtl 폴더로 이동
     material_package_path = f"/Game/project/asset/{asset_type}/{obj_name}/mtl/v{version:03d}"
     move_materials(destination_path, material_package_path)
-
-
 
